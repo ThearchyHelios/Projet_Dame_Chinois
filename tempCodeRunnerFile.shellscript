@@ -1,0 +1,43 @@
+echo "donnez le dernier terme de la suite des nombres premiers à calculer"
+read n
+i=2     #le premier nombre premier
+a=$(bc <<< "scale=0; sqrt($n)")  #scale=0 n'affiche pas les décimale, scale=1 la première, etc... sqrt() calcule la racine carré. marche grace à la commande bc
+m=1
+echo "voici sa suite de nombres premiers de $i à $n"
+
+nbr_premier() {
+    # while [ $i -le $a ]
+    # do
+    #     p=$(($n%$i))
+    #     if [ $p -eq 0 ]
+    #     then
+    #         echo "$n n'est pas un chiffre premier"
+    #         i=$((i+1))
+    #         exit
+    #     else
+    #         i=$((i+1))
+    #     fi
+    # done
+    p=$(($n%$i))
+    if [ $p -eq 0 ]
+    then
+        echo "$n n'est pas un chiffre premier"
+        i=$((i+1))
+        exit
+    else
+        i=$((i+1))
+    fi
+    echo "$n est un nombre premier"
+    cowsay "$n"
+}
+
+
+
+while [ $m -le $n ]
+do
+    echo $m
+    i=2
+    nbr_premier $m
+    m=$((m+1))
+    sleep 1
+done
