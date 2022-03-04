@@ -46,3 +46,9 @@ let check_direction cordonnee =
   | (x, y, z) when x = 0 && y = 0 && z = 0 -> "Point Centre"
   | _ -> "Zone Centrale";;
 
+(* Question 2 *)
+let a:cordonnee = (0, 0, 0) in
+if check_direction a = "Point Centre" || check_direction a = "Zone Centrale" || check_direction a = "Nord" || check_direction a = "Sud" then
+  "Question 2 Verifiee"
+else
+  "Question 2 Failed";;
