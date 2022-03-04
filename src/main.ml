@@ -8,7 +8,7 @@ let check_dimension dimension = match dimension with
 | _ -> false;;
 
 (* check_dimension (-4);; *)
-let dedans (a:cordonnee) dimension :bool =
+let est_dans_etoile (a:cordonnee) dimension :bool =
   let x, y, z = a in
   if (x + y + z) != 0 then
     false
@@ -26,11 +26,11 @@ let dedans (a:cordonnee) dimension :bool =
 if check_dimension dimension then
   let a = (0, 0, 0) in
   let b = dimension in
-  dedans a b
+  est_dans_etoile a b
 else
   false;;
 
-dedans (0, 0, 0) dimension;;
+est_dans_etoile (0, 0, 0) dimension;;
 
 
 (* type couleur = Vert | Rouge | Bleu | Jaune | Marron | Noir;; *)
