@@ -8,8 +8,8 @@ let check_dimension dimension = match dimension with
 | _ -> false;;
 
 (* check_dimension (-4);; *)
-let est_dans_etoile (a:cordonnee) dimension :bool =
-  let x, y, z = a in
+let est_dans_etoile cordonnee dimension :bool =
+  let x, y, z = cordonnee in
   if (x + y + z) != 0 then
     false
   else
@@ -55,3 +55,18 @@ if check_direction a = "Point Centre" || check_direction a = "Zone Centrale" || 
   "Question 2 Verifiee"
 else
   "Question 2 Failed";;
+
+
+(* Question 4 *)
+let tourner_case cordonnee (m:int) =
+  let x, y, z = cordonnee in
+  match m with
+  | 1 -> (-y, -z, -x)
+  | 2 -> (z, x, y)
+  | 3 -> (-x, -y, -z)
+  | 4 -> (-y, z, x)
+  | 5 -> (-z, -x, -y)
+  | 6 -> (x, y, z)
+  | _ -> cordonnee;;
+
+tourner_case (-3, 2, 1) 3;;
