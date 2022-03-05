@@ -25,6 +25,7 @@ else
   "Question 2 Failed";;
 
 
+  (*ceci est un test*)
 (* Question 3 *)
 let check_dimension dimension = match dimension with
 | _ when dimension < 0 -> false
