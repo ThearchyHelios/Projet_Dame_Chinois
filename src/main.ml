@@ -88,4 +88,40 @@ let diff_case (c1:cordonnee) (c2:cordonnee) =
   let x2, y2, z2 = c2 in
   (x1 - x2, y1 - y2, z1 - z2);;
 
-  
+
+(* Question 7 *)
+
+let diff_case_possitive (c1:cordonnee) (c2:cordonnee) =
+  let d = diff_case c1 c2 in
+  let x, y, z = d in
+  if x < 0 then (-x, y, z)
+  else
+    if y < 0 then (x, -y, z)
+    else
+      if z < 0 then (x, y, -z)
+      else
+        (x, y, z)
+      ;;
+
+diff_case (-1, 1, 0) (-1, 0, 1);;
+diff_case_possitive (-1, 1, 0) (-1, 0, 1);;
+
+let sont_cases_voisines (c1:cordonnee) (c2:cordonnee) =
+  let d = diff_case_possitive c1 c2 in
+  let x, y, z = d in
+  if x = 0 && y = 0 && z = 0 then
+    false
+  else
+    if x = 1 && y = 1 && z = 0 then
+      true
+    else
+      if x = 0 && y = 1 && z = 1 then
+        true
+      else
+        if x = 1 && y = 0 && z = 1 then
+          true
+        else
+          false
+        ;;
+
+sont_cases_voisines (0, -2, 4) (-1, -3, 4);;
