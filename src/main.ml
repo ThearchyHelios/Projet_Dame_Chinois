@@ -70,3 +70,13 @@ let tourner_case cordonnee (m:int) =
   | _ -> cordonnee;;
 
 tourner_case (-3, 2, 1) 3;;
+
+(* Question 5 *)
+
+type vecteur = int * int * int;;
+
+let translate cordonnee vecteur =
+  let c1, c2, c3= cordonnee in
+  let v1, v2, v3 = vecteur in
+  (c1 + v1, c2 + v2, c3 + v3);;
+
