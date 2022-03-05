@@ -80,3 +80,12 @@ let translate cordonnee vecteur =
   let v1, v2, v3 = vecteur in
   (c1 + v1, c2 + v2, c3 + v3);;
 
+
+(* Question 6 *)
+
+let diff_case (c1:cordonnee) (c2:cordonnee) =
+  let x1, y1, z1 = c1 in
+  let x2, y2, z2 = c2 in
+  (x1 - x2, y1 - y2, z1 - z2);;
+
+  
