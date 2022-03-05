@@ -18,7 +18,7 @@ let check_direction cordonnee =
 
 check_direction (-1, 3, -2);;
 
-let a:cordonnee = (-5, 3, 2) in
+let a:cordonnee = (-4, 2, 2) in
 if check_direction a = "Point Centre" || check_direction a = "Zone Centrale" || check_direction a = "Nord" || check_direction a = "Sud" then
   "Question 2 Verifiee"
 else
