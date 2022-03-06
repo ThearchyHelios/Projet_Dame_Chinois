@@ -4,6 +4,15 @@ let dimension = 3;;
 
 
 (* Question 2 *)
+(* SPÉCIFICATION : check_direction
+ 
+ * SIGNATURE :     coordonnee -> string
+ *
+ * SÉMANTIQUE :    Renvoie la position d'un pion
+ *
+ * EXEMPLES :      check_direction (-1, 3, -2) = "Zone Centrale"
+ *
+ *)
 let check_direction cordonnee =
   let dim = dimension in
   match cordonnee with
@@ -25,6 +34,7 @@ else
   "Question 2 Failed";;
 
 
+  (*ceci est un test*)
 (* Question 3 *)
 let check_dimension dimension = match dimension with
 | _ when dimension < 0 -> false
