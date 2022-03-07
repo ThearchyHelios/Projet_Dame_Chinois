@@ -25,7 +25,7 @@ let check_direction cordonnee =
   | (x, y, z) when x = 0 && y = 0 && z = 0 -> "Point Centre"
   | _ -> "Zone Centrale";;
 
-check_direction (-1, 3, -2);;
+assert(check_direction (-1, 3, -2) = "Zone Centrale");;
 
 let a:cordonnee = (-4, 2, 2) in
 if check_direction a = "Point Centre" || check_direction a = "Zone Centrale" || check_direction a = "Nord" || check_direction a = "Sud" then
@@ -34,14 +34,14 @@ else
   "Question 2 Failed";;
 
 
-  (*ceci est un test*)
 (* Question 3 *)
 let check_dimension dimension = match dimension with
 | _ when dimension < 0 -> false
 | _ when dimension > 0 -> true
 | _ -> false;;
 
-(* check_dimension (-4);; *)
+assert(check_dimension (-4) = false);;
+
 let est_dans_etoile cordonnee dimension :bool =
   let x, y, z = cordonnee in
   if (x + y + z) != 0 then
@@ -64,7 +64,7 @@ if check_dimension dimension then
 else
   false;;
 
-est_dans_etoile (0, 0, 0) dimension;;
+assert(est_dans_etoile (0, 0, 0) dimension = true);;
 
 
 (* Question 4 *)
@@ -79,7 +79,7 @@ let tourner_case cordonnee (m:int) =
   | 6 -> (x, y, z)
   | _ -> cordonnee;;
 
-tourner_case (-1, 3, -2) 1;;
+assert(tourner_case (-1, 3, -2) 1 = (-3, 2, 1));;
 
 
 (* Question 5 *)
@@ -114,8 +114,8 @@ let diff_case_possitive (c1:cordonnee) (c2:cordonnee) =
         (x, y, z)
       ;;
 
-diff_case (-1, 1, 0) (-1, 0, 1);;
-diff_case_possitive (-1, 1, 0) (-1, 0, 1);;
+assert(diff_case (-1, 1, 0) (-1, 0, 1) = (0, 1, -1));;
+assert(diff_case_possitive (-1, 1, 0) (-1, 0, 1) = (0, 1, 1));;
 
 let sont_cases_voisines (c1:cordonnee) (c2:cordonnee) =
   let d = diff_case_possitive c1 c2 in
@@ -135,7 +135,7 @@ let sont_cases_voisines (c1:cordonnee) (c2:cordonnee) =
           false
         ;;
 
-sont_cases_voisines (0, -2, 4) (-1, -3, 4);;
+assert(sont_cases_voisines (0, -2, 4) (-1, -3, 4) = true);;
 
 
 (* Question 8 *)
@@ -165,7 +165,8 @@ let calcul_pivot (c1:cordonnee) (c2:cordonnee) =
         else
           None;;
 
-calcul_pivot (3,3, -6) (3, -5, 1);;
+calcul_pivot (3,3, -6) (3, -5, 2);;
+assert(calcul_pivot (3,3, -6) (3, -5, 2) = Some (3, -1, -2));;
 
 
 (* Question 9 *)
@@ -198,4 +199,4 @@ let vec_et_dict (c1:cordonnee) (c2:cordonnee) =
         else
           None;;
 
-vec_et_dict (-3, -2, 5) (-3, 5, -2);;
+assert(vec_et_dict (-3, -2, 5) (-3, 5, -2) = Some ((0, 1, -1), 7));;
