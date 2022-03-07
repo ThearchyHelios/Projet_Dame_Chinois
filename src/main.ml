@@ -136,3 +136,66 @@ let sont_cases_voisines (c1:cordonnee) (c2:cordonnee) =
         ;;
 
 sont_cases_voisines (0, -2, 4) (-1, -3, 4);;
+
+
+(* Question 8 *)
+
+let pair x =
+  if x mod 2 = 0 then
+    true
+  else
+    false;;
+
+let calcul_pivot (c1:cordonnee) (c2:cordonnee) =
+  let d = diff_case_possitive c1 c2 in
+  let x, y, z = d in
+  let x1, y1, z1 = c1 in
+  let x2, y2, z2 = c2 in
+  if x = 0 && y = 0 && z = 0 then
+    None
+  else
+    if x = y && x != 0 && z = 0 && pair x then
+      Some((x1 + x2) / 2, (y1 + y2) / 2, z1)
+    else
+      if x = z && x != 0 && y = 0 && pair x then
+        Some((x1 + x2) / 2, y1, (z1 + z2) / 2)
+      else
+        if y = z && y != 0 && x = 0 && pair y then
+          Some(x1, (y1 + y2) / 2, (z1 + z2) / 2)
+        else
+          None;;
+
+calcul_pivot (3,3, -6) (3, -5, 1);;
+
+
+(* Question 9 *)
+
+let vec_et_dict (c1:cordonnee) (c2:cordonnee) = 
+  let d = diff_case_possitive c1 c2 in
+  let x, y, z = d in
+  let d0 = diff_case c1 c2 in
+  let x0, y0, z0 = d0 in
+  if x = 0 && y = 0  && z = 0 then
+    None
+  else
+    if x = y && x != 0 && z = 0 then
+      if x0 > 0 then
+        Some((-1, 1, 0), x)
+      else
+        Some((1, -1, 0), x)
+    else
+      if x = z && x != 0 && y = 0 then
+        if x0 > 0 then
+          Some((-1, 0, 1), x)
+        else
+          Some((1, 0, -1), x)
+      else
+        if y = z && y != 0 && x = 0 then
+          if y0 > 0 then
+            Some((0, -1, 1), y)
+          else
+            Some((0, 1, -1), y)
+        else
+          None;;
+
+vec_et_dict (-3, -2, 5) (-3, 5, -2);;
