@@ -1,4 +1,4 @@
-type cordonnee = int * int * int;;
+type cordonnee = int * int * int  (*restreint au triplet tels (i,j,k) tels que i+j+k=0*);; (*type case au lieu de coordonnee*)
 type dimension = int;;
 let dimension = 3;;
 
@@ -8,10 +8,11 @@ let dimension = 3;;
  
  * SIGNATURE :     coordonnee -> string
  *
- * SÉMANTIQUE :    Renvoie la position d'un pion
+ * SÉMANTIQUE :    Renvoie la position d'un pion/case
  *
  * EXEMPLES :      check_direction (-1, 3, -2) = "Zone Centrale"
- *
+ *                 check_direction (-2, 4, -2) = "Sud_Est"
+ *                 check_direction (3, -4, 1) = "Nord_Ouest"
  *)
 let check_direction cordonnee =
   let dim = dimension in
@@ -23,18 +24,52 @@ let check_direction cordonnee =
   | (x, y, z) when x < 0 && y < 0 && z > dim -> "Sud_Ouest"
   | (x, y, z) when x > 0 && y < -dim && z > 0 -> "Nord_Ouest"
   | (x, y, z) when x = 0 && y = 0 && z = 0 -> "Point Centre"
-  | _ -> "Zone Centrale";;
+  | _ -> "Zone Centrale"
+;;
 
 assert(check_direction (-1, 3, -2) = "Zone Centrale");;
 
+(*ici, on vérifie que l'on soit bien situé sur le losange Nord-Sud, que l'on a préalablement coupé en 4 sous-parties*)
 let a:cordonnee = (-4, 2, 2) in
 if check_direction a = "Point Centre" || check_direction a = "Zone Centrale" || check_direction a = "Nord" || check_direction a = "Sud" then
   "Question 2 Verifiee"
 else
   "Question 2 Failed";;
 
+(*Question 2 à refaire, est_dans_losange: case -> dimension ->bool  : (est_dans_losange c dim : bool = )*)
 
+(* SPÉCIFICATION : est_dans_losange
+ * SIGNATURE :     cordonnee -> dimension -> bool
+ *
+ * SÉMANTIQUE :    Renvoie un booléen selon la position du pion par rapport au losange.
+ *                 Ici, on vérifie que l'on soit bien situé sur le losange Nord-Sud, que l'on a préalablement coupé en 4 sous-parties
+ *
+ * EXEMPLES :
+ *
+ *   est_dans_losange () () = true
+ *   est_dans_losange () () = false
+ *)
+let est_dans_losange (c:cordonnee) (dim:dimension) : bool =
+  if check_direction c = "Point Centre" || check_direction c = "Zone Centrale" || check_direction c = "Nord" || check_direction c = "Sud" then
+    true
+  else
+    false
+;;
+
+est_dans_losange (6, 0, -6) (3) ;;
+
+
+(*
 (* Question 3 *)
+(* SPÉCIFICATION : check_dimension
+ 
+ * SIGNATURE :     dimension -> bool
+ *
+ * SÉMANTIQUE :    Vérifie que la dimension soit cohérante
+ *
+ * EXEMPLES :      check_dimension (-4) = false
+ *
+ *)
 let check_dimension dimension = match dimension with
 | _ when dimension < 0 -> false
 | _ when dimension > 0 -> true
