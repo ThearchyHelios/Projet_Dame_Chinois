@@ -226,3 +226,5 @@ let vec_et_dict2 (c1:cordonnee) (c2:cordonnee) =
       None;;
 
 assert(vec_et_dict2 (-3, -2, 5) (-3, 5, -2) = Some ((0, 1, -1), 7));; *)
+
+(* SUUUUUUUUUUUUUUUUUUUUUUUUUUUuu*)
