@@ -206,32 +206,23 @@ assert(calcul_pivot (3,3, -6) (3, -5, 2) = Some (3, -1, -2));;
 
 (* Question 9 *)
 
-let vec_et_dict (c1:cordonnee) (c2:cordonnee) = 
+let vec_et_dict2 (c1:cordonnee) (c2:cordonnee) =
   let d = diff_case_possitive c1 c2 in
   let x, y, z = d in
-  let d0 = diff_case c1 c2 in
-  let x0, y0, z0 = d0 in
+  let x1, y1, z1 = c1 in
+  let x2, y2, z2 = c2 in
   if x = 0 && y = 0  && z = 0 then
     None
   else
-    if x = y && x != 0 && z = 0 then
-      if x0 > 0 then
-        Some((-1, 1, 0), x)
-      else
-        Some((1, -1, 0), x)
+    if x = 0 then
+      Some((0,(y2 - y1) / y, (z2 - z1) / z), y)
     else
-      if x = z && x != 0 && y = 0 then
-        if x0 > 0 then
-          Some((-1, 0, 1), x)
-        else
-          Some((1, 0, -1), x)
-      else
-        if y = z && y != 0 && x = 0 then
-          if y0 > 0 then
-            Some((0, -1, 1), y)
-          else
-            Some((0, 1, -1), y)
-        else
-          None;;
+      if y = 0 then
+        Some(((x2 - x1) / x, 0, (z2 - z1) / z), x)
+    else
+      if z = 0 then
+        Some(((x2 - x1) / x, (y2 - y1) / y, 0), x)
+    else
+      None;;
 
-assert(vec_et_dict (-3, -2, 5) (-3, 5, -2) = Some ((0, 1, -1), 7));; *)
+assert(vec_et_dict2 (-3, -2, 5) (-3, 5, -2) = Some ((0, 1, -1), 7));;
