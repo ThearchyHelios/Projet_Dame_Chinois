@@ -165,7 +165,7 @@ let translate (c:case) (v:vecteur) : case =
  
  * SIGNATURE :     case -> case -> vecteur
  *
- * SÉMANTIQUE :    Calcule  la différence de chacune des coordonnées puis renvoie un vecteur de translation
+ * SÉMANTIQUE :    Calcule la différence de chacune des coordonnées puis renvoie un vecteur de translation
  *
  * EXEMPLES :      diff_case (3, 1, -4) (5, -1, -4) = = (-2, 2, 0)
  *                 diff_case (2, 3, -5) (0, -1, 1) = (2, 4, -6)
