@@ -99,7 +99,7 @@ let est_dans_etoile coordonnee dimension :bool =
           false
         ;;
 
-(* Verifier si la dimension est correct, si oui fonctionner le fonction <est_dans_etoile>, si non (ex: dimension = -3 ou dimension = 0) return false *)
+(* Verifier si la dimension est correcte, si oui utiliser la fonction <est_dans_etoile>, sinon (ex: dimension = -3 ou dimension = 0) return false *)
 (*
 if check_dimension dimension then
   let a = (0, 0, 0) in
