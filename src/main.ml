@@ -176,10 +176,20 @@ let diff_case (c1:case) (c2:case) : vecteur =
   let x2, y2, z2 = c2 in
   (x1 - x2, y1 - y2, z1 - z2);;
 
-(*
+
 (* Question 7 *)
 
-let diff_case_possitive (c1:case) (c2:case) =
+(* SPÉCIFICATION : diff_case_positive
+ 
+ * SIGNATURE :     case -> case -> case
+ *
+ * SÉMANTIQUE :    apres avoir calculé un vecteur de translation avec la fonction diif_case, transforme tout point négatif en positif et renvoie un nouveau vecteur
+ *
+ * EXEMPLES :      diff_case_positive (-1, 1, 0) (-1, 0, 1) = (0, 1, 1)
+ *                 diff_case_positive (-1, 2, -3) (1, -4, 2) = (2, 6, -5)
+ *)
+ 
+let diff_case_positive (c1:case) (c2:case) : vecteur =
   let d = diff_case c1 c2 in
   let x, y, z = d in
   if x < 0 then (-x, y, z)
@@ -192,10 +202,22 @@ let diff_case_possitive (c1:case) (c2:case) =
       ;;
 
 assert(diff_case (-1, 1, 0) (-1, 0, 1) = (0, 1, -1));;
-assert(diff_case_possitive (-1, 1, 0) (-1, 0, 1) = (0, 1, 1));;
+assert(diff_case_positive (-1, 1, 0) (-1, 0, 1) = (0, 1, 1));;
 
-let sont_cases_voisines (c1:case) (c2:case) =
-  let d = diff_case_possitive c1 c2 in
+
+(* SPÉCIFICATION : sont_cases_voisines
+ 
+ * SIGNATURE :     case -> case -> bool
+ *
+ * SÉMANTIQUE :    apres avoir rendu un vecteur de translation positif avec diff_case_positive, renvoie True ssi deux points du vecteur sont égaux à 1
+ *
+ * EXEMPLES :      sont_cases_voisines (0, -2, 4) (-1, -3, 4) = true
+ *                 sont_cases_voisines (-2, -2, 4) (-5, 3, 2) = false
+ *)
+
+
+let sont_cases_voisines (c1:case) (c2:case) : bool =
+  let d = diff_case_positive c1 c2 in
   let x, y, z = d in
   if x = 0 && y = 0 && z = 0 then
     false
@@ -223,8 +245,19 @@ let pair x =
   else
     false;;
 
+(* SPÉCIFICATION : calcul_pivot
+ 
+ * SIGNATURE :     case -> case -> case option
+ *
+ * SÉMANTIQUE :    renvoie les coordonnées de la case pivot, ce qui permettra au pion de se déplacer correctement
+ *
+ * EXEMPLES :      calcul_pivot (3,3, -6) (3, -5, 2) = Some (3, -1, -2) 
+ *                 calcul_pivot (2, 1, -3) (4, -5, 1) = None
+ *)
+
+
 let calcul_pivot (c1:case) (c2:case) =
-  let d = diff_case_possitive c1 c2 in
+  let d = diff_case_positive c1 c2 in
   let x, y, z = d in
   let x1, y1, z1 = c1 in
   let x2, y2, z2 = c2 in
@@ -248,8 +281,18 @@ assert(calcul_pivot (3,3, -6) (3, -5, 2) = Some (3, -1, -2));;
 
 (* Question 9 *)
 
-let vec_et_dict2 (c1:case) (c2:case) =
-  let d = diff_case_possitive c1 c2 in
+(* SPÉCIFICATION : vect_et_dist2
+ 
+ * SIGNATURE :     case -> case -> vecteur*int
+ *
+ * SÉMANTIQUE :    renvoie le vecteur de déplacement unitaire et la distance entre 2 cases
+ *
+ * EXEMPLES :      vec_et_dist (0, 2, -2) (0,0,0) = Some ((0, -1, 1), 2) 
+ *                 vec_et_dist (3, 2, -5) (1, 2, 3) = Some ((-1, 0, 1), 2)
+ *)
+
+let vec_et_dist (c1:case) (c2:case) =
+  let d = diff_case_positive c1 c2 in
   let x, y, z = d in
   let x1, y1, z1 = c1 in
   let x2, y2, z2 = c2 in
@@ -267,6 +310,4 @@ let vec_et_dict2 (c1:case) (c2:case) =
     else
       None;;
 
-assert(vec_et_dict2 (-3, -2, 5) (-3, 5, -2) = Some ((0, 1, -1), 7));;
-*)
-
+assert(vec_et_dist (-3, -2, 5) (-3, 5, -2) = Some ((0, 1, -1), 7));;
