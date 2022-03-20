@@ -1,12 +1,12 @@
-type cordonnee = int * int * int  (*restreint au triplet tels (i,j,k) tels que i+j+k=0*);; (*type case au lieu de coordonnee*)
+type case = int * int * int  (*restreint au triplet tels (i,j,k) tels que i+j+k=0*);; (*type case au lieu de case*)
 type dimension = int;;
 let dimension = 3;;
 
+(* Question 1 *)
 
-(* Question 2 *)
 (* SPÉCIFICATION : check_direction
  
- * SIGNATURE :     coordonnee -> string
+ * SIGNATURE :     case -> string
  *
  * SÉMANTIQUE :    Renvoie la position d'un pion/case
  *
@@ -14,84 +14,94 @@ let dimension = 3;;
  *                 check_direction (-2, 4, -2) = "Sud_Est"
  *                 check_direction (3, -4, 1) = "Nord_Ouest"
  *)
-let check_direction cordonnee =
+let check_direction case =
   let dim = dimension in
-  match cordonnee with
-  | (x, y, z) when x > dim && y < 0 && z < 0 -> "Nord"
-  | (x, y, z) when x > 0 && y > 0 && z < -dim -> "Nord_Est"
-  | (x, y, z) when x < 0 && y > dim && z < 0 -> "Sud_Est"
-  | (x, y, z) when x < -dim && y > 0 && z > 0 -> "Sud"
-  | (x, y, z) when x < 0 && y < 0 && z > dim -> "Sud_Ouest"
-  | (x, y, z) when x > 0 && y < -dim && z > 0 -> "Nord_Ouest"
-  | (x, y, z) when x = 0 && y = 0 && z = 0 -> "Point Centre"
+  match case with
+  | (i, j, k) when i > dim && j < 0 && k < 0 -> "Nord"
+  | (i, j, k) when i > 0 && j > 0 && k < -dim -> "Nord_Est"
+  | (i, j, k) when i < 0 && j > dim && k < 0 -> "Sud_Est"
+  | (i, j, k) when i < -dim && j > 0 && k > 0 -> "Sud"
+  | (i, j, k) when i < 0 && j < 0 && k > dim -> "Sud_Ouest"
+  | (i, j, k) when i > 0 && j < -dim && k > 0 -> "Nord_Ouest"
+  | (i, j, k) when i = 0 && j = 0 && k = 0 -> "Point Centre"
   | _ -> "Zone Centrale"
 ;;
 
 assert(check_direction (-1, 3, -2) = "Zone Centrale");;
 
+(* Question 2 *)
+
 (*ici, on vérifie que l'on soit bien situé sur le losange Nord-Sud, que l'on a préalablement coupé en 4 sous-parties*)
-let a:cordonnee = (-4, 2, 2) in
+let a:case = (-4, 2, 2) in
 if check_direction a = "Point Centre" || check_direction a = "Zone Centrale" || check_direction a = "Nord" || check_direction a = "Sud" then
   "Question 2 Verifiee"
 else
   "Question 2 Failed";;
 
-(*Question 2 à refaire, est_dans_losange: case -> dimension ->bool  : (est_dans_losange c dim : bool = )*)
 
 (* SPÉCIFICATION : est_dans_losange
- * SIGNATURE :     cordonnee -> dimension -> bool
+ * SIGNATURE :     case -> dimension -> bool
  *
  * SÉMANTIQUE :    Renvoie un booléen selon la position du pion par rapport au losange.
  *                 Ici, on vérifie que l'on soit bien situé sur le losange Nord-Sud, que l'on a préalablement coupé en 4 sous-parties
  *
  * EXEMPLES :
  *
- *   est_dans_losange () () = true
- *   est_dans_losange () () = false
+ *   est_dans_losange (3, 3, -6) (3) = false
+ *   est_dans_losange (-3, 3, 0) (3) = true
  *)
-let est_dans_losange (c:cordonnee) (dim:dimension) : bool =
+let est_dans_losange (c:case) (dim:dimension) : bool =
   if check_direction c = "Point Centre" || check_direction c = "Zone Centrale" || check_direction c = "Nord" || check_direction c = "Sud" then
     true
   else
     false
 ;;
 
-est_dans_losange (6, 0, -6) (3) ;;
 
-
-(*
 (* Question 3 *)
 (* SPÉCIFICATION : check_dimension
  
  * SIGNATURE :     dimension -> bool
  *
- * SÉMANTIQUE :    Vérifie que la dimension soit cohérante
+ * SÉMANTIQUE :    Vérifie que la dimension soit cohérente, donc positive (et pas dans une autre dimension...)
  *
  * EXEMPLES :      check_dimension (-4) = false
- *
+ *                 check_dimension (4) = true
  *)
-let check_dimension dimension = match dimension with
-| _ when dimension < 0 -> false
-| _ when dimension > 0 -> true
+let check_dimension (dim:dimension) : bool = 
+  match dim with
+| _ when dim < 0 -> false
+| _ when dim > 0 -> true
 | _ -> false;;
 
 assert(check_dimension (-4) = false);;
 
-let est_dans_etoile cordonnee dimension :bool =
-  let x, y, z = cordonnee in
-  if (x + y + z) != 0 then
+(* SPÉCIFICATION : est_dans_etoile
+ 
+ * SIGNATURE :     case -> dimension -> bool
+ *
+ * SÉMANTIQUE :    Vérifie qu'une case est bel et bien dans l'étoile. (Ni dans une planète, ni un tout autre astre...)
+ *
+ * EXEMPLES :      est_dans_etoile (2, 1, -3) (3) = true
+ *                 est_dans_etoile (4, 6, -10) (3) = false
+ *                 est_dans_etoile (4, 6, -10) (3) = false
+ *)
+let est_dans_etoile (c:case) (dim:dimension) :bool =
+  let i, j, k = c in
+  if (i + j + k) != 0 then
     false
   else
-    if (x <= dimension && x >= -dimension) && (y <= dimension && y >= -dimension) then true
+    if (i <= dim && i >= -dim) && (j <= dim && j >= -dim) then true
     else
-      if (y <= dimension && y >= -dimension) && (z <= dimension && z >= -dimension) then true
+      if (j <= dim && j >= -dim) && (k <= dim && k >= -dim) then true
       else
-        if (x <= dimension && x >= -dimension) && (z <= dimension && z >= -dimension) then true
+        if (i <= dim && i >= -dim) && (k <= dim && k >= -dim) then true
         else
           false
         ;;
 
-(* Verifier si la dimension est correct, si oui fonctionner le fonction <est_dans_etoile>, si non (ex: dimension = -3 ou dimension = 0) return false *)
+(* Verifier si la dimension est correcte, si oui utiliser la fonction <est_dans_etoile>, sinon (ex: dimension = -3 ou dimension = 0) return false *)
+(*
 if check_dimension dimension then
   let a = (0, 0, 0) in
   let b = dimension in
@@ -100,11 +110,22 @@ else
   false;;
 
 assert(est_dans_etoile (0, 0, 0) dimension = true);;
-
+*)
 
 (* Question 4 *)
-let tourner_case cordonnee (m:int) =
-  let x, y, z = cordonnee in
+
+(* SPÉCIFICATION : tourner_case
+ 
+ * SIGNATURE :     case -> int -> case
+ *
+ * SÉMANTIQUE :    Permet de garder le meme emplacement des pions selon m-sixieme de tour de plateau dans le sens antihoraire
+ *
+ * EXEMPLES :      tourner_case (-4, 1, 3) (3) = (-1, -3, 4)
+ *                 tourner_case (4, -3, -1) (3) = (-4, 3, 1)
+ *)
+
+let tourner_case (c:case) (m:int) : case =
+  let x, y, z = c in
   match m with
   | 1 -> (-y, -z, -x)
   | 2 -> (z, x, y)
@@ -112,24 +133,45 @@ let tourner_case cordonnee (m:int) =
   | 4 -> (-y, z, x)
   | 5 -> (-z, -x, -y)
   | 6 -> (x, y, z)
-  | _ -> cordonnee;;
+  | _ -> c ;; (* pour remplir tous les cas possible avec le match with, mais une valeur autre 1,2,3,4,5 ou 6 ne sera jamais atteinte *)
 
-assert(tourner_case (-1, 3, -2) 1 = (-3, 2, 1));;
+
+(* assert(tourner_case (-1, 3, -2) 1 = (-3, 2, 1)) *);;
 
 
 (* Question 5 *)
 
 type vecteur = int * int * int;;
 
-let translate cordonnee vecteur =
-  let c1, c2, c3= cordonnee in
-  let v1, v2, v3 = vecteur in
+(* SPÉCIFICATION : translate
+ 
+ * SIGNATURE :     case -> vecteur -> case
+ *
+ * SÉMANTIQUE :    Effectue une translation d'une case par un vecteur
+ *
+ * EXEMPLES :      translate (3, 0, -3) (-1, 2, -1) = (2, 2, -4)
+ *                 translate (1, -4, 3) (2, -2, 0) = (3, -6, 3)
+ *)
+
+let translate (c:case) (v:vecteur) : case =
+  let c1, c2, c3= c in
+  let v1, v2, v3 = v in
   (c1 + v1, c2 + v2, c3 + v3);;
 
 
 (* Question 6 *)
 
-let diff_case (c1:cordonnee) (c2:cordonnee) =
+(* SPÉCIFICATION : diff_case
+ 
+ * SIGNATURE :     case -> case -> vecteur
+ *
+ * SÉMANTIQUE :    Calcule la différence de chacune des coordonnées puis renvoie un vecteur de translation
+ *
+ * EXEMPLES :      diff_case (3, 1, -4) (5, -1, -4) = = (-2, 2, 0)
+ *                 diff_case (2, 3, -5) (0, -1, 1) = (2, 4, -6)
+ *)
+
+let diff_case (c1:case) (c2:case) : vecteur =
   let x1, y1, z1 = c1 in
   let x2, y2, z2 = c2 in
   (x1 - x2, y1 - y2, z1 - z2);;
@@ -137,7 +179,17 @@ let diff_case (c1:cordonnee) (c2:cordonnee) =
 
 (* Question 7 *)
 
-let diff_case_possitive (c1:cordonnee) (c2:cordonnee) =
+(* SPÉCIFICATION : diff_case_positive
+ 
+ * SIGNATURE :     case -> case -> case
+ *
+ * SÉMANTIQUE :    apres avoir calculé un vecteur de translation avec la fonction diif_case, transforme tout point négatif en positif et renvoie un nouveau vecteur
+ *
+ * EXEMPLES :      diff_case_positive (-1, 1, 0) (-1, 0, 1) = (0, 1, 1)
+ *                 diff_case_positive (-1, 2, -3) (1, -4, 2) = (2, 6, -5)
+ *)
+ 
+let diff_case_positive (c1:case) (c2:case) : vecteur =
   let d = diff_case c1 c2 in
   let x, y, z = d in
   if x < 0 then (-x, y, z)
@@ -150,10 +202,22 @@ let diff_case_possitive (c1:cordonnee) (c2:cordonnee) =
       ;;
 
 assert(diff_case (-1, 1, 0) (-1, 0, 1) = (0, 1, -1));;
-assert(diff_case_possitive (-1, 1, 0) (-1, 0, 1) = (0, 1, 1));;
+assert(diff_case_positive (-1, 1, 0) (-1, 0, 1) = (0, 1, 1));;
 
-let sont_cases_voisines (c1:cordonnee) (c2:cordonnee) =
-  let d = diff_case_possitive c1 c2 in
+
+(* SPÉCIFICATION : sont_cases_voisines
+ 
+ * SIGNATURE :     case -> case -> bool
+ *
+ * SÉMANTIQUE :    apres avoir rendu un vecteur de translation positif avec diff_case_positive, renvoie True ssi deux points du vecteur sont égaux à 1
+ *
+ * EXEMPLES :      sont_cases_voisines (0, -2, 4) (-1, -3, 4) = true
+ *                 sont_cases_voisines (-2, -2, 4) (-5, 3, 2) = false
+ *)
+
+
+let sont_cases_voisines (c1:case) (c2:case) : bool =
+  let d = diff_case_positive c1 c2 in
   let x, y, z = d in
   if x = 0 && y = 0 && z = 0 then
     false
@@ -181,8 +245,19 @@ let pair x =
   else
     false;;
 
-let calcul_pivot (c1:cordonnee) (c2:cordonnee) =
-  let d = diff_case_possitive c1 c2 in
+(* SPÉCIFICATION : calcul_pivot
+ 
+ * SIGNATURE :     case -> case -> case option
+ *
+ * SÉMANTIQUE :    renvoie les coordonnées de la case pivot, ce qui permettra au pion de se déplacer correctement
+ *
+ * EXEMPLES :      calcul_pivot (3,3, -6) (3, -5, 2) = Some (3, -1, -2) 
+ *                 calcul_pivot (2, 1, -3) (4, -5, 1) = None
+ *)
+
+
+let calcul_pivot (c1:case) (c2:case) =
+  let d = diff_case_positive c1 c2 in
   let x, y, z = d in
   let x1, y1, z1 = c1 in
   let x2, y2, z2 = c2 in
@@ -206,8 +281,18 @@ assert(calcul_pivot (3,3, -6) (3, -5, 2) = Some (3, -1, -2));;
 
 (* Question 9 *)
 
-let vec_et_dict2 (c1:cordonnee) (c2:cordonnee) =
-  let d = diff_case_possitive c1 c2 in
+(* SPÉCIFICATION : vect_et_dist2
+ 
+ * SIGNATURE :     case -> case -> vecteur*int
+ *
+ * SÉMANTIQUE :    renvoie le vecteur de déplacement unitaire et la distance entre 2 cases
+ *
+ * EXEMPLES :      vec_et_dist (0, 2, -2) (0,0,0) = Some ((0, -1, 1), 2) 
+ *                 vec_et_dist (3, 2, -5) (1, 2, 3) = Some ((-1, 0, 1), 2)
+ *)
+
+let vec_et_dist (c1:case) (c2:case) =
+  let d = diff_case_positive c1 c2 in
   let x, y, z = d in
   let x1, y1, z1 = c1 in
   let x2, y2, z2 = c2 in
@@ -225,4 +310,4 @@ let vec_et_dict2 (c1:cordonnee) (c2:cordonnee) =
     else
       None;;
 
-assert(vec_et_dict2 (-3, -2, 5) (-3, 5, -2) = Some ((0, 1, -1), 7));;
+assert(vec_et_dist (-3, -2, 5) (-3, 5, -2) = Some ((0, 1, -1), 7));;
