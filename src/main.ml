@@ -311,3 +311,42 @@ let vec_et_dist (c1:case) (c2:case) =
       None;;
 
 assert(vec_et_dist (-3, -2, 5) (-3, 5, -2) = Some ((0, 1, -1), 7));;
+
+
+(* Question 10*)
+
+type liste = [];;
+let tourner_list liste =
+  let first = List.hd liste in
+  let last = List.tl liste in
+  last @ [first];;
+
+tourner_list [1;2;3];;
+
+let der_liste liste =
+  let length = List.length liste in
+  List.nth liste (length-1) ;;
+
+der_liste [1;2;3];;
+
+(* Question 11 *)
+
+let remplir_segment int (liste_case:case) =
+  let x, y, z = liste_case in
+  match int with
+  | 0 -> x :: y :: z :: []
+  | n -> let rec function_list (return_list:liste) n =
+    if n = 0 then return_list
+    (* else
+      return_list * ((function_list return_list :: [x;y-1;z+1]) (n-1));;
+   *)
+    else
+      x :: y+n+1 :: z-n-1 :: function_list(return_list n-1);;
+
+let rec factorial n =
+  if n = 0 then
+    1
+  else
+    n * factorial (n-1) ;;
+
+factorial 5
