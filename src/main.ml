@@ -328,10 +328,11 @@ let der_liste liste =
   List.nth liste (length-1) ;;
 
 der_liste [1;2;3];;
+assert(der_liste [1;2;3] = 3);;
 
 (* Question 11 *)
 
-let remplir_segment int (liste_case:case) =
+(* let remplir_segment int (liste_case:case) =
   let x, y, z = liste_case in
   match int with
   | 0 -> x :: y :: z :: []
@@ -341,7 +342,7 @@ let remplir_segment int (liste_case:case) =
       return_list * ((function_list return_list :: [x;y-1;z+1]) (n-1));;
    *)
     else
-      x :: y+n+1 :: z-n-1 :: function_list(return_list n-1);;
+      x :: y+n+1 :: z-n-1 :: function_list(return_list n-1);; *)
 
 let rec factorial n =
   if n = 0 then
