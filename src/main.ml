@@ -315,7 +315,6 @@ assert(vec_et_dist (-3, -2, 5) (-3, 5, -2) = Some ((0, 1, -1), 7));;
 
 (* Question 10*)
 
-type liste = [];;
 let tourner_list liste =
   let first = List.hd liste in
   let last = List.tl liste in
@@ -327,22 +326,34 @@ let der_liste liste =
   let length = List.length liste in
   List.nth liste (length-1) ;;
 
-der_liste [1;2;3];;
+let rec derniere_element_list list =
+  match list with
+  | [] -> failwith "liste vide"
+  | [x] -> x
+  | pr::fin -> derniere_element_list fin;;
+
+derniere_element_list [1;2;3;5];;
+
+der_liste [1;2;3;5];;
 assert(der_liste [1;2;3] = 3);;
+
+derniere_element_list["Vert"; "Rouge"; "Jaune"; "Bleu"];;
+
 
 (* Question 11 *)
 
-(* let remplir_segment int (liste_case:case) =
-  let x, y, z = liste_case in
-  match int with
-  | 0 -> x :: y :: z :: []
-  | n -> let rec function_list (return_list:liste) n =
-    if n = 0 then return_list
-    (* else
-      return_list * ((function_list return_list :: [x;y-1;z+1]) (n-1));;
-   *)
-    else
-      x :: y+n+1 :: z-n-1 :: function_list(return_list n-1);; *)
+let remplir_segment_refaire (a:int) (case:case) =
+  let x, y, z = case in
+  let rec remplir_segment_refaire_rec return_list a =
+    match a with
+    | 0 -> return_list
+    | _ -> remplir_segment_refaire_rec (List.cons (x, y + a - 1, z - a + 1) return_list) (a - 1) in
+  remplir_segment_refaire_rec [] a;;
+
+remplir_segment_refaire 3 (-4, 1, 3);;
+
+
+
 
 let rec factorial n =
   if n = 0 then
