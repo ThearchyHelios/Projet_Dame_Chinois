@@ -393,8 +393,13 @@ let remplir_triangle_haut (a:int) (case:case) =
 remplir_triangle_haut 3 (3, 1, -4);;
 
 
-  (* Question 14 *)
-  type couleur = Vert | Jaune | Rouge | Noir | Bleu | Marron | Code of string (*une chaine restreinte a 3 caracteres*) | Libre;;
+(* Question 14 *)
+
+type couleur = Vert | Jaune | Rouge | Noir | Bleu | Marron | Code of string (*une chaine restreinte a 3 chr *) | Libre;;
+
+type case_coloree = case * couleur;;
+
+type configuration = case_coloree list * couleur list * dimension;;
 
 let colorier_case (c:case) (couleur:couleur) =
   let x, y, z = c in
