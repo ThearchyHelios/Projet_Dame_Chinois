@@ -368,7 +368,7 @@ let remplir_triangle_bas (a:int) (case:case) =
       | _ -> let rec remplir_triangle_bas_rec_bis return_list_c c =
                 match c with
                 | 0 -> return_list_c
-                | _ -> remplir_triangle_bas_rec_bis (List.cons (x + c - 1, y + b - c, z -b +c) return_list_c) (c - 1) in
+                | _ -> remplir_triangle_bas_rec_bis (List.cons (x + c - 1, y + b - c, - x - y - b + 1) return_list_c) (c - 1) in
           remplir_triangle_bas_rec ((remplir_triangle_bas_rec_bis return_list_b (b))) (b - 1) in
     remplir_triangle_bas_rec [] (a);;
 
