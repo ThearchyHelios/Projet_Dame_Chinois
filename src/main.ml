@@ -394,7 +394,7 @@ remplir_triangle_haut 3 (3, 1, -4);;
 
 
   (* Question 14 *)
-type couleur = Rouge | Bleu | Jaune | Vert | Blanc | Noir;;
+  type couleur = Vert | Jaune | Rouge | Noir | Bleu | Marron | Code of string (*une chaine restreinte a 3 caracteres*) | Libre;;
 
 let colorier_case (c:case) (couleur:couleur) =
   let x, y, z = c in
