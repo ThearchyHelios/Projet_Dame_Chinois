@@ -342,15 +342,16 @@ derniere_element_list["Vert"; "Rouge"; "Jaune"; "Bleu"];;
 
 (* Question 11 *)
 
-let remplir_segment_refaire (a:int) (case:case) =
+let remplir_segment (a:int) (case:case) =
   let x, y, z = case in
-  let rec remplir_segment_refaire_rec return_list a =
+  let rec remplir_segment_rec return_list a =
     match a with
     | 0 -> return_list
-    | _ -> remplir_segment_refaire_rec (List.cons (x, y + a - 1, z - a + 1) return_list) (a - 1) in
-  remplir_segment_refaire_rec [] a;;
+    | _ -> remplir_segment_rec (List.cons (x, y + a - 1, z - a + 1) return_list) (a - 1) in
+  remplir_segment_rec [] a;;
 
-remplir_segment_refaire 3 (-4, 1, 3);;
+remplir_segment 1 (0, 0, 0);;
+remplir_segment 3 (-4, 1, 3);;
 
 
 
