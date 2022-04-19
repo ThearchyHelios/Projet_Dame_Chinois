@@ -315,32 +315,41 @@ assert(vec_et_dist (-3, -2, 5) (-3, 5, -2) = Some ((0, 1, -1), 7));;
 
 (* Question 10*)
 
-let tourner_list liste =
+let tourner_liste liste =
   let first = List.hd liste in
   let last = List.tl liste in
   last @ [first];;
 
-tourner_list [1;2;3];;
+tourner_liste [1;2;3];;
 
 let der_liste liste =
   let length = List.length liste in
-  List.nth liste (length-1) ;;
-
-let rec derniere_element_list list =
-  match list with
-  | [] -> failwith "liste vide"
-  | [x] -> x
-  | pr::fin -> derniere_element_list fin;;
-
-derniere_element_list [1;2;3;5];;
+  if length==0 then failwith "liste vide" else List.nth liste (length-1) ;;
 
 der_liste [1;2;3;5];;
 assert(der_liste [1;2;3] = 3);;
+der_liste ["Vert"; "Rouge"; "Jaune"; "Bleu"];;
 
-derniere_element_list["Vert"; "Rouge"; "Jaune"; "Bleu"];;
+let rec dernier_element_list list =
+  match list with
+  | [] -> failwith "liste vide"
+  | [x] -> x
+  | pr::fin -> dernier_element_list fin;;
+
+dernier_element_list [1;2;3;5];;
+dernier_element_list["Vert"; "Rouge"; "Jaune"; "Bleu"];;
+
+(*Nous avions choisi de coder la fonction demandée de deux facons différentes mais nous utiliserons uniquement der_liste*)
 
 
 (* Question 11 *)
+
+(* let rec remplir_segment (m:int) (cases:case) : case list =
+  let x, y, z = cases in 
+  match m with
+  | 0 -> []
+  | _ -> List.cons (x, y + m - 1, z - m + 1) (remplir_segment (m-1) cases)
+;; *)
 
 let remplir_segment (a:int) (case:case) =
   let x, y, z = case in
@@ -357,6 +366,7 @@ remplir_segment 3 (-4, 1, 3);;
 
 est_dans_etoile (-3, 4, -1) 3;;
 
+(*part du coin en bas à gauche*)
 
 let remplir_triangle_bas (a:int) (case:case) =
   let x, y, z = case in
@@ -375,7 +385,16 @@ let remplir_triangle_bas (a:int) (case:case) =
 
 remplir_triangle_bas 3 (-3, 4, -1);;
 
+let rec remplir_triangle_bas_test (m:int) (cases:case) =
+    let x, y, z = cases in
+    match m with
+    | 0 -> [(x, y, z)]
+    | _ -> List.cons (x + m - 1, y, - x - y - m + 1) (remplir_triangle_bas_test (m-1) cases)
+
 (* Question 13 *)
+
+(*part du coin*)
+
 let remplir_triangle_haut (a:int) (case:case) =
   let x, y, z = case in
   match a with
