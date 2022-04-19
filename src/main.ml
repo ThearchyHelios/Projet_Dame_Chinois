@@ -2,6 +2,8 @@ type case = int * int * int  (*restreint au triplet tels (i,j,k) tels que i+j+k=
 type dimension = int;;
 let dimension = 3;;
 
+let nb_jours = 6;;
+
 (* Question 1 *)
 
 (* SPÉCIFICATION : check_direction
@@ -353,6 +355,15 @@ let remplir_segment (a:int) (case:case) =
 remplir_segment 1 (0, 0, 0);;
 remplir_segment 3 (-4, 1, 3);;
 
+let rec remplir_segment_refaire (a:int) (case:case) =
+  let x, y, z = case in
+  match a with
+  | 0 -> []
+  | _ -> List.cons (x, y + a - 1, z - a + 1) (remplir_segment_refaire (a - 1) (case));;
+
+remplir_segment_refaire 3 (-4, 1, 3);;
+
+
 (* Question 12 *)
 
 est_dans_etoile (-3, 4, -1) 3;;
@@ -401,7 +412,8 @@ type case_coloree = case * couleur;;
 
 type configuration = case_coloree list * couleur list * dimension;;
 
-let colorier_case (c:case) (couleur:couleur) =
-  let x, y, z = c in
-  (couleur, x, y, z);;
+(* Question 15 *)
 
+let tourner_config (config:configuration) : configuration =
+  let case_coloree, couleur_list, dimension = config in
+  let tour_tourner = 6 / nb_jours in
