@@ -391,3 +391,12 @@ let remplir_triangle_haut (a:int) (case:case) =
     remplir_triangle_haut_rec [] (a);;
 
 remplir_triangle_haut 3 (3, 1, -4);;
+
+
+  (* Question 14 *)
+type couleur = Rouge | Bleu | Jaune | Vert | Blanc | Noir;;
+
+let colorier_case (c:case) (couleur:couleur) =
+  let x, y, z = c in
+  (couleur, x, y, z);;
+
