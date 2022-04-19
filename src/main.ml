@@ -374,3 +374,20 @@ let remplir_triangle_bas (a:int) (case:case) =
 
 
 remplir_triangle_bas 3 (-3, 4, -1);;
+
+(* Question 13 *)
+let remplir_triangle_haut (a:int) (case:case) =
+  let x, y, z = case in
+  match a with
+  | 0 -> [(x, y, z)]
+  | _ -> let rec remplir_triangle_haut_rec return_list_b b =
+      match b with
+      | 0 -> return_list_b
+      | _ -> let rec remplir_triangle_haut_rec_bis return_list_c c =
+                match c with
+                | 0 -> return_list_c
+                | _ -> remplir_triangle_haut_rec_bis (List.cons (x - c + 1, - x - z + b - 1 , z - b + c) return_list_c) (c - 1) in
+          remplir_triangle_haut_rec ((remplir_triangle_haut_rec_bis return_list_b (b))) (b - 1) in
+    remplir_triangle_haut_rec [] (a);;
+
+remplir_triangle_haut 3 (3, 1, -4);;
