@@ -311,3 +311,83 @@ let vec_et_dist (c1:case) (c2:case) =
       None;;
 
 assert(vec_et_dist (-3, -2, 5) (-3, 5, -2) = Some ((0, 1, -1), 7));;
+
+
+(* Question 10*)
+
+let tourner_list liste =
+  let first = List.hd liste in
+  let last = List.tl liste in
+  last @ [first];;
+
+tourner_list [1;2;3];;
+
+let der_liste liste =
+  let length = List.length liste in
+  List.nth liste (length-1) ;;
+
+let rec derniere_element_list list =
+  match list with
+  | [] -> failwith "liste vide"
+  | [x] -> x
+  | pr::fin -> derniere_element_list fin;;
+
+derniere_element_list [1;2;3;5];;
+
+der_liste [1;2;3;5];;
+assert(der_liste [1;2;3] = 3);;
+
+derniere_element_list["Vert"; "Rouge"; "Jaune"; "Bleu"];;
+
+
+(* Question 11 *)
+
+let remplir_segment (a:int) (case:case) =
+  let x, y, z = case in
+  let rec remplir_segment_rec return_list a =
+    match a with
+    | 0 -> return_list
+    | _ -> remplir_segment_rec (List.cons (x, y + a - 1, z - a + 1) return_list) (a - 1) in
+  remplir_segment_rec [] a;;
+
+remplir_segment 1 (0, 0, 0);;
+remplir_segment 3 (-4, 1, 3);;
+
+(* Question 12 *)
+
+est_dans_etoile (-3, 4, -1) 3;;
+
+
+let remplir_triangle_bas (a:int) (case:case) =
+  let x, y, z = case in
+  match a with
+  | 0 -> [(x, y, z)]
+  | _ -> let rec remplir_triangle_bas_rec return_list_b b =
+      match b with
+      | 0 -> return_list_b
+      | _ -> let rec remplir_triangle_bas_rec_bis return_list_c c =
+                match c with
+                | 0 -> return_list_c
+                | _ -> remplir_triangle_bas_rec_bis (List.cons (x + c - 1, y + b - c, - x - y - b + 1) return_list_c) (c - 1) in
+          remplir_triangle_bas_rec ((remplir_triangle_bas_rec_bis return_list_b (b))) (b - 1) in
+    remplir_triangle_bas_rec [] (a);;
+
+
+remplir_triangle_bas 3 (-3, 4, -1);;
+
+(* Question 13 *)
+let remplir_triangle_haut (a:int) (case:case) =
+  let x, y, z = case in
+  match a with
+  | 0 -> [(x, y, z)]
+  | _ -> let rec remplir_triangle_haut_rec return_list_b b =
+      match b with
+      | 0 -> return_list_b
+      | _ -> let rec remplir_triangle_haut_rec_bis return_list_c c =
+                match c with
+                | 0 -> return_list_c
+                | _ -> remplir_triangle_haut_rec_bis (List.cons (x - c + 1, - x - z + b - 1 , z - b + c) return_list_c) (c - 1) in
+          remplir_triangle_haut_rec ((remplir_triangle_haut_rec_bis return_list_b (b))) (b - 1) in
+    remplir_triangle_haut_rec [] (a);;
+
+remplir_triangle_haut 3 (3, 1, -4);;
