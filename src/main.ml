@@ -417,3 +417,11 @@ type configuration = case_coloree list * couleur list * dimension;;
 let tourner_config (config:configuration) : configuration =
   let case_coloree, couleur_list, dimension = config in
   let tour_tourner = 6 / nb_jours in
+  let rec tourner_case_list return_list case_coloree =
+    match case_coloree with
+    | [] -> return_list
+    | pr :: fin -> let case, couleur = pr in
+      tourner_case_list (List.cons (tourner_case case tour_tourner, couleur) return_list) fin in
+  tourner_case_list [] case_coloree, couleur_list, dimension;;
+
+tourner_config ( [(1,2,-3), Bleu], [Bleu; Rouge; Vert], 3);;
