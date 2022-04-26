@@ -365,7 +365,6 @@ remplir_segment 3 (-1, 4, -3);;
 remplir_segment 1 (0, 0, 0);;
 remplir_segment 3 (-4, 1, 3);;
 
-<<<<<<< Updated upstream
 (* Question 12 *)
 
 est_dans_etoile (-3, 4, -1) 3;;
@@ -386,7 +385,7 @@ remplir_segment_refaire 3 (-4, 1, 3);;
 remplir_segment_refaire 3 (-1, 4, -3);;
 
 (* Question 12 *)
->>>>>>> Stashed changes
+
 let remplir_triangle_bas (a:int) (case:case) =
   let x, y, z = case in
   match a with
@@ -411,14 +410,12 @@ let rec remplir_triangle_bas_test (m:int) (cases:case) =
     | 0 -> [(x, y, z)]
     | _ -> List.cons (x + m - 1, y, - x - y - m + 1) (remplir_triangle_bas_test (m-1) cases)
 
+
+
 (* Question 13 *)
 
-<<<<<<< Updated upstream
-(*part du coin*)
-=======
 est_dans_etoile (-3, 4, -1) 3;;
 
->>>>>>> Stashed changes
 
 let remplir_triangle_haut (a:int) (case:case) =
   let x, y, z = case in
@@ -435,9 +432,7 @@ let remplir_triangle_haut (a:int) (case:case) =
     remplir_triangle_bas_rec [] (a);;
 
 
-<<<<<<< Updated upstream
 remplir_triangle_haut 3 (3, 1, -4);;
-=======
 remplir_triangle_haut 3 (-3, 4, -1);;
 
 
@@ -461,5 +456,3 @@ let tourner_config (config:configuration) : configuration =
       tourner_case_list (List.cons (tourner_case case tour_tourner, couleur) return_list) fin in
   tourner_case_list [] case_coloree, couleur_list, dimension;;
 
-tourner_config ( [(1,2,-3), Bleu], [Bleu; Rouge; Vert], 3);;
->>>>>>> Stashed changes
