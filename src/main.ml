@@ -444,6 +444,17 @@ type case_coloree = case * couleur;;
 
 type configuration = case_coloree list * couleur list * dimension;;
 
+<<<<<<< Updated upstream
+=======
+let rec colorie (coul:couleur) (lc:case list) : case_coloree list =
+  match lc with
+  | [] -> []
+  | (pr::fin) -> List.cons (pr, coul) (colorie coul fin);;
+
+
+colorie (Vert) [(1,1,1);(2,2,2);(3,3,3)] ;;
+
+>>>>>>> Stashed changes
 (* Question 15 *)
 
 let tourner_config (config:configuration) : configuration =
@@ -456,3 +467,77 @@ let tourner_config (config:configuration) : configuration =
       tourner_case_list (List.cons (tourner_case case tour_tourner, couleur) return_list) fin in
   tourner_case_list [] case_coloree, couleur_list, dimension;;
 
+<<<<<<< Updated upstream
+=======
+tourner_config ( [(1,2,-3), Bleu], [Bleu; Rouge; Vert], 3);;
+
+
+(* Question 16 *)
+
+let list_joueur_init () =
+  let () = print_string "Type the number of player:" in
+  let nombre_joueur = read_int() in
+  match nombre_joueur with
+  | 0 -> failwith "Il faut au moins un joueur"
+  | _ -> let rec list_joueur_init_rec return_list n =
+           match n with
+           | 0 -> return_list
+           | n -> let () = print_string "Type the name of player:" in
+             let nom_joueur = read_line() in
+             list_joueur_init_rec (List.cons (nom_joueur) return_list) (n-1) in
+    list_joueur_init_rec [] nombre_joueur;;
+
+(* list_joueur_init();; *)
+
+(* let list_joueur_couleur_init liste_joueur couleur=
+   let choose l = 
+    let rand = Random.int (List.length l) in 
+    List.nth l rand in
+   let rec list_joueur_couleur_init_rec return_list liste_joueur =
+    match liste_joueur with
+    | [] -> return_list
+    | pr :: fin -> let nom_joueur = pr in
+      list_joueur_couleur_init_rec (List.cons (nom_joueur, choose couleur) return_list) fin in
+   list_joueur_couleur_init_rec [] liste_joueur;;
+
+   list_joueur_couleur_init ["joueur1", "joueur2", "joueur3"] [Vert; Jaune; Rouge; Bleu; Marron];; *)
+
+
+let remplir_init (list_joueur) dimension =
+  let rec remplir_init_rec return_list list_joueur =
+    match list_joueur with
+    | [] -> return_list
+    | pr :: fin -> let nom_joueur = pr in
+    (* Printf.printf "Type the color of player %s: Vert (1) Jaune (2) Rouge (3) Noir (4) Bleu (5) Marron (6) Code of string (7) Libre (8)" nom_joueur; *)
+    let couleur = read_int() in
+    match couleur with
+    | 1 -> remplir_init_rec (List.cons (nom_joueur, Vert) return_list) fin
+    | 2 -> remplir_init_rec (List.cons (nom_joueur, Jaune) return_list) fin
+    | 3 -> remplir_init_rec (List.cons (nom_joueur, Rouge) return_list) fin
+    | 4 -> remplir_init_rec (List.cons (nom_joueur, Noir) return_list) fin
+    | 5 -> remplir_init_rec (List.cons (nom_joueur, Bleu) return_list) fin
+    | 6 -> remplir_init_rec (List.cons (nom_joueur, Marron) return_list) fin
+    | 7 -> remplir_init_rec (List.cons (nom_joueur, Libre) return_list) fin
+    | 8 -> remplir_init_rec (List.cons (nom_joueur, Libre) return_list) fin
+    | _ -> remplir_init_rec return_list fin in
+  remplir_init_rec [] list_joueur;;
+
+remplir_init (["joueur1"; "joueur2"; "joueur3"]) 3;;
+
+(* Question 17 *)
+
+(* Question 17 *)
+
+(* Question 17 *)
+
+(* Question 17 *)
+
+
+
+(* Question 17 *)
+
+
+
+(* Question 21 *)
+
+>>>>>>> Stashed changes
