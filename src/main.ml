@@ -357,18 +357,70 @@ let remplir_segment (a:int) (case:case) =
     match a with
     | 0 -> return_list
     | _ -> remplir_segment_rec (List.cons (x, y + a - 1, z - a + 1) return_list) (a - 1) in
-  remplir_segment_rec [] a;;
+  remplir_segment_rec [] a
+;;
 
+(*test juste en dessous*)
+remplir_segment 3 (-1, 4, -3);;
 remplir_segment 1 (0, 0, 0);;
 remplir_segment 3 (-4, 1, 3);;
 
+<<<<<<< Updated upstream
 (* Question 12 *)
 
 est_dans_etoile (-3, 4, -1) 3;;
 
 (*part du coin en bas à gauche*)
 
+=======
+let rec remplir_segment_refaire (a:int) (case:case) =
+  let x, y, z = case in
+  match a with
+  | 0 -> []
+  | _ -> List.cons (x, y + a - 1, z - a + 1) (remplir_segment_refaire (a - 1) (case))
+;;
+
+
+(* test juste en dessous *)
+remplir_segment_refaire 3 (-4, 1, 3);;
+remplir_segment_refaire 3 (-1, 4, -3);;
+
+(* Question 12 *)
+>>>>>>> Stashed changes
 let remplir_triangle_bas (a:int) (case:case) =
+  let x, y, z = case in
+  match a with
+  | 0 -> [(x, y, z)]
+  | _ -> let rec remplir_triangle_haut_rec return_list_b b =
+      match b with
+      | 0 -> return_list_b
+      | _ -> let rec remplir_triangle_haut_rec_bis return_list_c c =
+                match c with
+                | 0 -> return_list_c
+                | _ -> remplir_triangle_haut_rec_bis (List.cons (x - c + 1, - x - z + b - 1 , z - b + c) return_list_c) (c - 1) in
+          remplir_triangle_haut_rec ((remplir_triangle_haut_rec_bis return_list_b (b))) (b - 1) in
+    remplir_triangle_haut_rec [] (a);;
+
+remplir_triangle_bas 3 (3, 1, -4);;
+
+
+
+let rec remplir_triangle_bas_test (m:int) (cases:case) =
+    let x, y, z = cases in
+    match m with
+    | 0 -> [(x, y, z)]
+    | _ -> List.cons (x + m - 1, y, - x - y - m + 1) (remplir_triangle_bas_test (m-1) cases)
+
+(* Question 13 *)
+
+<<<<<<< Updated upstream
+(*part du coin*)
+=======
+est_dans_etoile (-3, 4, -1) 3;;
+
+>>>>>>> Stashed changes
+
+let remplir_triangle_haut (a:int) (case:case) =
   let x, y, z = case in
   match a with
   | 0 -> [(x, y, z)]
@@ -383,30 +435,31 @@ let remplir_triangle_bas (a:int) (case:case) =
     remplir_triangle_bas_rec [] (a);;
 
 
-remplir_triangle_bas 3 (-3, 4, -1);;
-
-let rec remplir_triangle_bas_test (m:int) (cases:case) =
-    let x, y, z = cases in
-    match m with
-    | 0 -> [(x, y, z)]
-    | _ -> List.cons (x + m - 1, y, - x - y - m + 1) (remplir_triangle_bas_test (m-1) cases)
-
-(* Question 13 *)
-
-(*part du coin*)
-
-let remplir_triangle_haut (a:int) (case:case) =
-  let x, y, z = case in
-  match a with
-  | 0 -> [(x, y, z)]
-  | _ -> let rec remplir_triangle_haut_rec return_list_b b =
-      match b with
-      | 0 -> return_list_b
-      | _ -> let rec remplir_triangle_haut_rec_bis return_list_c c =
-                match c with
-                | 0 -> return_list_c
-                | _ -> remplir_triangle_haut_rec_bis (List.cons (x - c + 1, - x - z + b - 1 , z - b + c) return_list_c) (c - 1) in
-          remplir_triangle_haut_rec ((remplir_triangle_haut_rec_bis return_list_b (b))) (b - 1) in
-    remplir_triangle_haut_rec [] (a);;
-
+<<<<<<< Updated upstream
 remplir_triangle_haut 3 (3, 1, -4);;
+=======
+remplir_triangle_haut 3 (-3, 4, -1);;
+
+
+(* Question 14 *)
+
+type couleur = Vert | Jaune | Rouge | Noir | Bleu | Marron | Code of string (*une chaine restreinte a 3 chr *) | Libre;;
+
+type case_coloree = case * couleur;;
+
+type configuration = case_coloree list * couleur list * dimension;;
+
+(* Question 15 *)
+
+let tourner_config (config:configuration) : configuration =
+  let case_coloree, couleur_list, dimension = config in
+  let tour_tourner = 6 / nb_jours in
+  let rec tourner_case_list return_list case_coloree =
+    match case_coloree with
+    | [] -> return_list
+    | pr :: fin -> let case, couleur = pr in
+      tourner_case_list (List.cons (tourner_case case tour_tourner, couleur) return_list) fin in
+  tourner_case_list [] case_coloree, couleur_list, dimension;;
+
+tourner_config ( [(1,2,-3), Bleu], [Bleu; Rouge; Vert], 3);;
+>>>>>>> Stashed changes
