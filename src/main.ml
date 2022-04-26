@@ -7,7 +7,7 @@ let nb_jours = 6;;
 (* Question 1 *)
 
 (* SPÉCIFICATION : check_direction
- 
+
  * SIGNATURE :     case -> string
  *
  * SÉMANTIQUE :    Renvoie la position d'un pion/case
@@ -15,7 +15,7 @@ let nb_jours = 6;;
  * EXEMPLES :      check_direction (-1, 3, -2) = "Zone Centrale"
  *                 check_direction (-2, 4, -2) = "Sud_Est"
  *                 check_direction (3, -4, 1) = "Nord_Ouest"
- *)
+*)
 let check_direction case =
   let dim = dimension in
   match case with
@@ -51,7 +51,7 @@ else
  *
  *   est_dans_losange (3, 3, -6) (3) = false
  *   est_dans_losange (-3, 3, 0) (3) = true
- *)
+*)
 let est_dans_losange (c:case) (dim:dimension) : bool =
   if check_direction c = "Point Centre" || check_direction c = "Zone Centrale" || check_direction c = "Nord" || check_direction c = "Sud" then
     true
@@ -62,24 +62,24 @@ let est_dans_losange (c:case) (dim:dimension) : bool =
 
 (* Question 3 *)
 (* SPÉCIFICATION : check_dimension
- 
+
  * SIGNATURE :     dimension -> bool
  *
  * SÉMANTIQUE :    Vérifie que la dimension soit cohérente, donc positive (et pas dans une autre dimension...)
  *
  * EXEMPLES :      check_dimension (-4) = false
  *                 check_dimension (4) = true
- *)
+*)
 let check_dimension (dim:dimension) : bool = 
   match dim with
-| _ when dim < 0 -> false
-| _ when dim > 0 -> true
-| _ -> false;;
+  | _ when dim < 0 -> false
+  | _ when dim > 0 -> true
+  | _ -> false;;
 
 assert(check_dimension (-4) = false);;
 
 (* SPÉCIFICATION : est_dans_etoile
- 
+
  * SIGNATURE :     case -> dimension -> bool
  *
  * SÉMANTIQUE :    Vérifie qu'une case est bel et bien dans l'étoile. (Ni dans une planète, ni un tout autre astre...)
@@ -87,20 +87,20 @@ assert(check_dimension (-4) = false);;
  * EXEMPLES :      est_dans_etoile (2, 1, -3) (3) = true
  *                 est_dans_etoile (4, 6, -10) (3) = false
  *                 est_dans_etoile (4, 6, -10) (3) = false
- *)
+*)
 let est_dans_etoile (c:case) (dim:dimension) :bool =
   let i, j, k = c in
   if (i + j + k) != 0 then
     false
   else
-    if (i <= dim && i >= -dim) && (j <= dim && j >= -dim) then true
-    else
-      if (j <= dim && j >= -dim) && (k <= dim && k >= -dim) then true
-      else
-        if (i <= dim && i >= -dim) && (k <= dim && k >= -dim) then true
-        else
-          false
-        ;;
+  if (i <= dim && i >= -dim) && (j <= dim && j >= -dim) then true
+  else
+  if (j <= dim && j >= -dim) && (k <= dim && k >= -dim) then true
+  else
+  if (i <= dim && i >= -dim) && (k <= dim && k >= -dim) then true
+  else
+    false
+;;
 
 (* Verifier si la dimension est correcte, si oui utiliser la fonction <est_dans_etoile>, sinon (ex: dimension = -3 ou dimension = 0) return false *)
 (*
@@ -117,14 +117,14 @@ assert(est_dans_etoile (0, 0, 0) dimension = true);;
 (* Question 4 *)
 
 (* SPÉCIFICATION : tourner_case
- 
+
  * SIGNATURE :     case -> int -> case
  *
  * SÉMANTIQUE :    Permet de garder le meme emplacement des pions selon m-sixieme de tour de plateau dans le sens antihoraire
  *
  * EXEMPLES :      tourner_case (-4, 1, 3) (3) = (-1, -3, 4)
  *                 tourner_case (4, -3, -1) (3) = (-4, 3, 1)
- *)
+*)
 
 let tourner_case (c:case) (m:int) : case =
   let x, y, z = c in
@@ -146,14 +146,14 @@ let tourner_case (c:case) (m:int) : case =
 type vecteur = int * int * int;;
 
 (* SPÉCIFICATION : translate
- 
+
  * SIGNATURE :     case -> vecteur -> case
  *
  * SÉMANTIQUE :    Effectue une translation d'une case par un vecteur
  *
  * EXEMPLES :      translate (3, 0, -3) (-1, 2, -1) = (2, 2, -4)
  *                 translate (1, -4, 3) (2, -2, 0) = (3, -6, 3)
- *)
+*)
 
 let translate (c:case) (v:vecteur) : case =
   let c1, c2, c3= c in
@@ -164,14 +164,14 @@ let translate (c:case) (v:vecteur) : case =
 (* Question 6 *)
 
 (* SPÉCIFICATION : diff_case
- 
+
  * SIGNATURE :     case -> case -> vecteur
  *
  * SÉMANTIQUE :    Calcule la différence de chacune des coordonnées puis renvoie un vecteur de translation
  *
  * EXEMPLES :      diff_case (3, 1, -4) (5, -1, -4) = = (-2, 2, 0)
  *                 diff_case (2, 3, -5) (0, -1, 1) = (2, 4, -6)
- *)
+*)
 
 let diff_case (c1:case) (c2:case) : vecteur =
   let x1, y1, z1 = c1 in
@@ -182,40 +182,40 @@ let diff_case (c1:case) (c2:case) : vecteur =
 (* Question 7 *)
 
 (* SPÉCIFICATION : diff_case_positive
- 
+
  * SIGNATURE :     case -> case -> case
  *
  * SÉMANTIQUE :    apres avoir calculé un vecteur de translation avec la fonction diif_case, transforme tout point négatif en positif et renvoie un nouveau vecteur
  *
  * EXEMPLES :      diff_case_positive (-1, 1, 0) (-1, 0, 1) = (0, 1, 1)
  *                 diff_case_positive (-1, 2, -3) (1, -4, 2) = (2, 6, -5)
- *)
- 
+*)
+
 let diff_case_positive (c1:case) (c2:case) : vecteur =
   let d = diff_case c1 c2 in
   let x, y, z = d in
   if x < 0 then (-x, y, z)
   else
-    if y < 0 then (x, -y, z)
-    else
-      if z < 0 then (x, y, -z)
-      else
-        (x, y, z)
-      ;;
+  if y < 0 then (x, -y, z)
+  else
+  if z < 0 then (x, y, -z)
+  else
+    (x, y, z)
+;;
 
 assert(diff_case (-1, 1, 0) (-1, 0, 1) = (0, 1, -1));;
 assert(diff_case_positive (-1, 1, 0) (-1, 0, 1) = (0, 1, 1));;
 
 
 (* SPÉCIFICATION : sont_cases_voisines
- 
+
  * SIGNATURE :     case -> case -> bool
  *
  * SÉMANTIQUE :    apres avoir rendu un vecteur de translation positif avec diff_case_positive, renvoie True ssi deux points du vecteur sont égaux à 1
  *
  * EXEMPLES :      sont_cases_voisines (0, -2, 4) (-1, -3, 4) = true
  *                 sont_cases_voisines (-2, -2, 4) (-5, 3, 2) = false
- *)
+*)
 
 
 let sont_cases_voisines (c1:case) (c2:case) : bool =
@@ -224,17 +224,17 @@ let sont_cases_voisines (c1:case) (c2:case) : bool =
   if x = 0 && y = 0 && z = 0 then
     false
   else
-    if x = 1 && y = 1 && z = 0 then
-      true
-    else
-      if x = 0 && y = 1 && z = 1 then
-        true
-      else
-        if x = 1 && y = 0 && z = 1 then
-          true
-        else
-          false
-        ;;
+  if x = 1 && y = 1 && z = 0 then
+    true
+  else
+  if x = 0 && y = 1 && z = 1 then
+    true
+  else
+  if x = 1 && y = 0 && z = 1 then
+    true
+  else
+    false
+;;
 
 assert(sont_cases_voisines (0, -2, 4) (-1, -3, 4) = true);;
 
@@ -248,14 +248,14 @@ let pair x =
     false;;
 
 (* SPÉCIFICATION : calcul_pivot
- 
+
  * SIGNATURE :     case -> case -> case option
  *
  * SÉMANTIQUE :    renvoie les coordonnées de la case pivot, ce qui permettra au pion de se déplacer correctement
  *
  * EXEMPLES :      calcul_pivot (3,3, -6) (3, -5, 2) = Some (3, -1, -2) 
  *                 calcul_pivot (2, 1, -3) (4, -5, 1) = None
- *)
+*)
 
 
 let calcul_pivot (c1:case) (c2:case) =
@@ -266,16 +266,16 @@ let calcul_pivot (c1:case) (c2:case) =
   if x = 0 && y = 0 && z = 0 then
     None
   else
-    if x = y && x != 0 && z = 0 && pair x then
-      Some((x1 + x2) / 2, (y1 + y2) / 2, z1)
-    else
-      if x = z && x != 0 && y = 0 && pair x then
-        Some((x1 + x2) / 2, y1, (z1 + z2) / 2)
-      else
-        if y = z && y != 0 && x = 0 && pair y then
-          Some(x1, (y1 + y2) / 2, (z1 + z2) / 2)
-        else
-          None;;
+  if x = y && x != 0 && z = 0 && pair x then
+    Some((x1 + x2) / 2, (y1 + y2) / 2, z1)
+  else
+  if x = z && x != 0 && y = 0 && pair x then
+    Some((x1 + x2) / 2, y1, (z1 + z2) / 2)
+  else
+  if y = z && y != 0 && x = 0 && pair y then
+    Some(x1, (y1 + y2) / 2, (z1 + z2) / 2)
+  else
+    None;;
 
 calcul_pivot (3,3, -6) (3, -5, 2);;
 assert(calcul_pivot (3,3, -6) (3, -5, 2) = Some (3, -1, -2));;
@@ -284,14 +284,14 @@ assert(calcul_pivot (3,3, -6) (3, -5, 2) = Some (3, -1, -2));;
 (* Question 9 *)
 
 (* SPÉCIFICATION : vect_et_dist2
- 
+
  * SIGNATURE :     case -> case -> vecteur*int
  *
  * SÉMANTIQUE :    renvoie le vecteur de déplacement unitaire et la distance entre 2 cases
  *
  * EXEMPLES :      vec_et_dist (0, 2, -2) (0,0,0) = Some ((0, -1, 1), 2) 
  *                 vec_et_dist (3, 2, -5) (1, 2, 3) = Some ((-1, 0, 1), 2)
- *)
+*)
 
 let vec_et_dist (c1:case) (c2:case) =
   let d = diff_case_positive c1 c2 in
@@ -301,16 +301,16 @@ let vec_et_dist (c1:case) (c2:case) =
   if x = 0 && y = 0  && z = 0 then
     None
   else
-    if x = 0 then
-      Some((0,(y2 - y1) / y, (z2 - z1) / z), y)
-    else
-      if y = 0 then
-        Some(((x2 - x1) / x, 0, (z2 - z1) / z), x)
-    else
-      if z = 0 then
-        Some(((x2 - x1) / x, (y2 - y1) / y, 0), x)
-    else
-      None;;
+  if x = 0 then
+    Some((0,(y2 - y1) / y, (z2 - z1) / z), y)
+  else
+  if y = 0 then
+    Some(((x2 - x1) / x, 0, (z2 - z1) / z), x)
+  else
+  if z = 0 then
+    Some(((x2 - x1) / x, (y2 - y1) / y, 0), x)
+  else
+    None;;
 
 assert(vec_et_dist (-3, -2, 5) (-3, 5, -2) = Some ((0, 1, -1), 7));;
 
@@ -374,13 +374,13 @@ let remplir_triangle_bas (a:int) (case:case) =
   match a with
   | 0 -> [(x, y, z)]
   | _ -> let rec remplir_triangle_bas_rec return_list_b b =
-      match b with
-      | 0 -> return_list_b
-      | _ -> let rec remplir_triangle_bas_rec_bis return_list_c c =
-                match c with
-                | 0 -> return_list_c
-                | _ -> remplir_triangle_bas_rec_bis (List.cons (x + c - 1, y + b - c, - x - y - b + 1) return_list_c) (c - 1) in
-          remplir_triangle_bas_rec ((remplir_triangle_bas_rec_bis return_list_b (b))) (b - 1) in
+           match b with
+           | 0 -> return_list_b
+           | _ -> let rec remplir_triangle_bas_rec_bis return_list_c c =
+                    match c with
+                    | 0 -> return_list_c
+                    | _ -> remplir_triangle_bas_rec_bis (List.cons (x + c - 1, y + b - c, - x - y - b + 1) return_list_c) (c - 1) in
+             remplir_triangle_bas_rec ((remplir_triangle_bas_rec_bis return_list_b (b))) (b - 1) in
     remplir_triangle_bas_rec [] (a);;
 
 
@@ -392,13 +392,13 @@ let remplir_triangle_haut (a:int) (case:case) =
   match a with
   | 0 -> [(x, y, z)]
   | _ -> let rec remplir_triangle_haut_rec return_list_b b =
-      match b with
-      | 0 -> return_list_b
-      | _ -> let rec remplir_triangle_haut_rec_bis return_list_c c =
-                match c with
-                | 0 -> return_list_c
-                | _ -> remplir_triangle_haut_rec_bis (List.cons (x - c + 1, - x - z + b - 1 , z - b + c) return_list_c) (c - 1) in
-          remplir_triangle_haut_rec ((remplir_triangle_haut_rec_bis return_list_b (b))) (b - 1) in
+           match b with
+           | 0 -> return_list_b
+           | _ -> let rec remplir_triangle_haut_rec_bis return_list_c c =
+                    match c with
+                    | 0 -> return_list_c
+                    | _ -> remplir_triangle_haut_rec_bis (List.cons (x - c + 1, - x - z + b - 1 , z - b + c) return_list_c) (c - 1) in
+             remplir_triangle_haut_rec ((remplir_triangle_haut_rec_bis return_list_b (b))) (b - 1) in
     remplir_triangle_haut_rec [] (a);;
 
 remplir_triangle_haut 3 (3, 1, -4);;
@@ -411,6 +411,13 @@ type couleur = Vert | Jaune | Rouge | Noir | Bleu | Marron | Code of string (*un
 type case_coloree = case * couleur;;
 
 type configuration = case_coloree list * couleur list * dimension;;
+
+let rec colorie couleur case_list =
+  match case_list with
+  | [] -> []
+  | (pr::fin) -> List.cons (pr, couleur) (colorie couleur fin);;
+
+colorie Vert [(2,-3,1), (-3, 2, 1), (-6, 3, 3)];;
 
 (* Question 15 *)
 
@@ -425,3 +432,73 @@ let tourner_config (config:configuration) : configuration =
   tourner_case_list [] case_coloree, couleur_list, dimension;;
 
 tourner_config ( [(1,2,-3), Bleu], [Bleu; Rouge; Vert], 3);;
+
+
+(* Question 16 *)
+
+let list_joueur_init () =
+  let () = print_string "Type the number of player:" in
+  let nombre_joueur = read_int() in
+  match nombre_joueur with
+  | 0 -> failwith "Il faut au moins un joueur"
+  | _ -> let rec list_joueur_init_rec return_list n =
+           match n with
+           | 0 -> return_list
+           | n -> let () = print_string "Type the name of player:" in
+             let nom_joueur = read_line() in
+             list_joueur_init_rec (List.cons (nom_joueur) return_list) (n-1) in
+    list_joueur_init_rec [] nombre_joueur;;
+
+list_joueur_init();;
+
+(* let list_joueur_couleur_init liste_joueur couleur=
+   let choose l = 
+    let rand = Random.int (List.length l) in 
+    List.nth l rand in
+   let rec list_joueur_couleur_init_rec return_list liste_joueur =
+    match liste_joueur with
+    | [] -> return_list
+    | pr :: fin -> let nom_joueur = pr in
+      list_joueur_couleur_init_rec (List.cons (nom_joueur, choose couleur) return_list) fin in
+   list_joueur_couleur_init_rec [] liste_joueur;;
+
+   list_joueur_couleur_init ["joueur1", "joueur2", "joueur3"] [Vert; Jaune; Rouge; Bleu; Marron];; *)
+
+
+let remplir_init (list_joueur) dimension =
+  let rec remplir_init_rec return_list list_joueur =
+    match list_joueur with
+    | [] -> return_list
+    | pr :: fin -> let nom_joueur = pr in
+    (* Printf.printf "Type the color of player %s: Vert (1) Jaune (2) Rouge (3) Noir (4) Bleu (5) Marron (6) Code of string (7) Libre (8)" nom_joueur; *)
+    let couleur = read_int() in
+    match couleur with
+    | 1 -> remplir_init_rec (List.cons (nom_joueur, Vert) return_list) fin
+    | 2 -> remplir_init_rec (List.cons (nom_joueur, Jaune) return_list) fin
+    | 3 -> remplir_init_rec (List.cons (nom_joueur, Rouge) return_list) fin
+    | 4 -> remplir_init_rec (List.cons (nom_joueur, Noir) return_list) fin
+    | 5 -> remplir_init_rec (List.cons (nom_joueur, Bleu) return_list) fin
+    | 6 -> remplir_init_rec (List.cons (nom_joueur, Marron) return_list) fin
+    | 7 -> remplir_init_rec (List.cons (nom_joueur, Libre) return_list) fin
+    | 8 -> remplir_init_rec (List.cons (nom_joueur, Libre) return_list) fin
+    | _ -> remplir_init_rec return_list fin in
+  remplir_init_rec [] list_joueur;;
+
+remplir_init (["joueur1", "joueur2", "joueur3"]) 3;;
+
+(* Question 17 *)
+
+(* Question 17 *)
+
+(* Question 17 *)
+
+(* Question 17 *)
+
+
+
+(* Question 17 *)
+
+
+
+(* Question 21 *)
+
