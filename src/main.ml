@@ -423,6 +423,7 @@ colorie Vert [(2,-3,1), (-3, 2, 1), (-6, 3, 3)];;
 
 let tourner_config (config:configuration) : configuration =
   let case_coloree, couleur_list, dimension = config in
+  let nb_jours = List.length couleur_list in
   let tour_tourner = 6 / nb_jours in
   let rec tourner_case_list return_list case_coloree =
     match case_coloree with
@@ -431,7 +432,7 @@ let tourner_config (config:configuration) : configuration =
       tourner_case_list (List.cons (tourner_case case tour_tourner, couleur) return_list) fin in
   tourner_case_list [] case_coloree, couleur_list, dimension;;
 
-tourner_config ( [(1,2,-3), Bleu], [Bleu; Rouge; Vert], 3);;
+tourner_config ([(-3, 0, 3), Bleu; (2, -1, -1), Vert; (-5, 2,3), Rouge], [Bleu; Rouge; Vert], 3);;
 
 (*Question 16*)
 
