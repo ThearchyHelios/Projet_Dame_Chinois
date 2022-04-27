@@ -110,7 +110,6 @@ if check_dimension dimension then
   est_dans_etoile a b
 else
   false;;
-
 assert(est_dans_etoile (0, 0, 0) dimension = true);;
 *)
 
@@ -412,8 +411,15 @@ type case_coloree = case * couleur;;
 
 type configuration = case_coloree list * couleur list * dimension;;
 
-(* Question 15 *)
+let colorie (color:couleur) (list_case:case list) : case_coloree list =
+  let rec list_case_coloree return_list list_case color =
+    match list_case with
+    | [] -> return_list
+    | pr :: fin -> list_case_coloree (List.cons (pr, color) return_list) fin in
+  list_case_coloree [] list_case color;;
 
+(* Question 15 *)
+(*La liste des joueurs - couleur - n'est pas tourner*)
 let tourner_config (config:configuration) : configuration =
   let case_coloree, couleur_list, dimension = config in
   let tour_tourner = 6 / nb_jours in
@@ -424,8 +430,8 @@ let tourner_config (config:configuration) : configuration =
       tourner_case_list (List.cons (tourner_case case tour_tourner, couleur) return_list) fin in
   tourner_case_list [] case_coloree, couleur_list, dimension;;
 
-tourner_config ( [(1,2,-3), Bleu], [Bleu; Rouge; Vert], 3);;
-
+tourner_config ( [(1,2,-3), Bleu], [Bleu; Rouge; Vert], 3);;  
+ 
 (*Question 16*)
 
 type liste_joueur = couleur list ;;
