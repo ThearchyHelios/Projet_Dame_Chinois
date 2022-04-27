@@ -438,15 +438,17 @@ tourner_config ([(-3, 0, 3), Bleu; (2, -1, -1), Vert; (-5, 2,3), Rouge], [Bleu; 
 
 type liste_joueur = couleur list ;;
 (*Demander pour faire le triangle sud*)
-let remplir_init (a:liste_joueur) (dim:dimension) : configuration =
+let remplir_init (a:liste_joueur) (dim:dimension) =
   let rec creation_plateau return_list liste_joueur =
     match liste_joueur with
     | [] -> return_list
     | pr::fin -> let triangle = remplir_triangle_bas 3 (-3,4,-1) in
       let case_color_1 = colorie pr triangle in
-      let case_color, a, dim = tourner_config (List.cons case_color_1 return_list), a, dim in
-      creation_plateau case_color fin in
-  creation_plateau [] a, a, dim;;
+      let case_color, a, dim = tourner_config (case_color_1, liste_joueur, dim) in
+      creation_plateau (List.cons (case_color, a) return_list) fin in
+  creation_plateau [] a, dim;;
+
+remplir_init([Vert; Bleu; Rouge]) 3;;
 
 (*Question 17*)
 
