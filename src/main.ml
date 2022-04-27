@@ -441,12 +441,12 @@ type liste_joueur = couleur list ;;
 let remplir_init (a:liste_joueur) (dim:dimension) =
   let rec creation_plateau return_list liste_joueur =
     match liste_joueur with
-    | [] -> return_list
+    | [] -> return_list, a, dim
     | pr::fin -> let triangle = remplir_triangle_bas 3 (-3,4,-1) in
       let case_color_1 = colorie pr triangle in
       let case_color, a, dim = tourner_config (case_color_1, liste_joueur, dim) in
-      creation_plateau (List.cons (case_color, a) return_list) fin in
-  creation_plateau [] a, dim;;
+      creation_plateau (List.cons (case_color) return_list) fin in
+  creation_plateau [] a;;
 
 remplir_init([Vert; Bleu; Rouge]) 3;;
 
