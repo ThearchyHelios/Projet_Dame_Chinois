@@ -430,7 +430,8 @@ let tourner_config (config:configuration) : configuration =
       tourner_case_list (List.cons (tourner_case case tour_tourner, couleur) return_list) fin in
   tourner_case_list [] case_coloree, couleur_list, dimension;;
 
-tourner_config ( [(1,2,-3), Bleu], [Bleu; Rouge; Vert], 3);;   
+tourner_config ( [(1,2,-3), Bleu], [Bleu; Rouge; Vert], 3);;  
+ 
 (*Question 16*)
 
 type liste_joueur = couleur list ;;

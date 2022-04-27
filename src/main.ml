@@ -425,3 +425,77 @@ let tourner_config (config:configuration) : configuration =
   tourner_case_list [] case_coloree, couleur_list, dimension;;
 
 tourner_config ( [(1,2,-3), Bleu], [Bleu; Rouge; Vert], 3);;
+
+(*Question 16*)
+
+type liste_joueur = couleur list ;;
+(*Demander pour faire le triangle sud*)
+let remplir_init (a:liste_joueur) (dim:dimension) : configuration =
+  let rec creation_plateau return_list liste_joueur =
+    match liste_joueur with
+    | [] -> return_list
+    | pr::fin -> let triangle = remplir_triangle_bas 3 (-3,4,-1) in
+      let case_color_1 = colorie pr triangle in
+      let case_color, a, dim = tourner_config (List.cons case_color_1 return_list), a, dim in
+      creation_plateau case_color fin in
+  creation_plateau [] a, a, dim;;
+
+(*Question 17*)
+
+let associe (a:case) (config:configuration) : couleur =
+  let list_case, list_couleur, dim = config in
+  let rec case_in_list list_case =
+    match list_case with
+    | [] -> Libre
+    | pr::fin -> let case_1, couleur = pr in
+      if case_1 = a
+         then couleur
+      else
+        case_in_list fin in
+  case_in_list list_case;;
+
+(*Question 18*)
+
+let supprime_dans_config (conf:configuration) (c:case) : configuration =
+  let list_case, list_couleur, dim = conf in
+  let rec suppr list_case =
+    match list_case with
+    | [] -> []
+    | pr::fin -> let case, couleur = pr in
+      if case = c then
+        suppr fin
+      else
+        List.cons(pr (suppr fin))
+  (suppr list_case), list_couleur, dim;;
+
+(*Question 19*)
+
+type coup = Du of case * case | Sm of case list;;
+
+let est_coup_valide (conf:configuration) (Du(c1,c2):coup) : bool =
+  let list_case, list_couleur, dim = conf in
+  let x1, y1, z1 = c1 in
+  let x2, y2, z2 = c2 in
+  if sont_cases_voisines c1 c2 = true then
+    if associe c1 conf = list_couleur 1 then
+      if associe c2 conf = Libre then
+        if est_dans_losange c2 dim = true then
+          true
+        else
+          false
+      else
+        false
+    else
+      false
+  else
+    false;;
+
+(*Question 20*)
+
+let appliquer_coup (conf:configuration) (Du(c1,c2):coup) : configuration =
+  let conf1 = supprime_dans_config conf c1 in
+  let list_case, list_couleur, dim = conf1 in
+  let list_case1 = list_case @ [c2,(List.nth list_couleur 0)]
+  list_case1, list_couleur, dim;;
+
+
