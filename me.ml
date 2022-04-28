@@ -555,7 +555,7 @@ let mettre_a_jour_configuration (conf:configuration) (cp:coup) : configuration =
 
 (*Question 22*)
 
-let est_libre_seg (c1:case) (c2:case) (conf:configuration) : bool =
+(*let est_libre_seg (c1:case) (c2:case) (conf:configuration) : bool =
   let vect_unit, distance = vect_et_dist c1 c2 in
   let vx, vy, vz = vect_unit in
   let cx, cy, cz = c1 in
@@ -570,19 +570,21 @@ let est_libre_seg (c1:case) (c2:case) (conf:configuration) : bool =
         seg_libre (cx2, cy2, cz2) conf (distance - 1)
       else
         false
-  seg_libre (vx+cx,vy+cy,vz+cz) conf (distance - 1);;
+  
+  seg_libre vx+cx,vy+cy,vz+cz conf (distance - 1);;*)
 
 (*Question 23*)
 
-let est_saut (c1:case) (c2:case) (conf:configuration) : bool =
-  if associe c2 conf != Libre then
+(*let est_saut (c1:case) (c2:case) (conf:configuration) : bool =
+  if associe c2 conf = Libre then
     let list_case, list_color, dim = conf in
     if associe c1 conf = List.hd list_color then
-      let vect_unit, distance = vect_et_dist c1 c2 in
-      let vx, vy, vz = vect_unit in
-      let cx, cy, cz = c1 in
-      if distance mod 2 != 0 then (*Si distance pair il ne peut pas avoir de pivot*) then
+      let vect_unit, distance_c1_c2 = vect_et_dist c1 c2 in
+      if distance_c1_c2 mod 2 != 0 then (*Si distance pair il ne peut pas avoir de pivot*) then
         let pivot = calcul_pivot c1 c2 in
+        if associe pivot conf != libre then
+          if est_libre_seg
+
 
       
 
@@ -598,4 +600,4 @@ if associe (vx+cx,vy+cy,vz+cz) conf != Libre then
       else
         false 
     else
-      false;;
+      false;;*)
