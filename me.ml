@@ -555,23 +555,29 @@ let mettre_a_jour_configuration (conf:configuration) (cp:coup) : configuration =
 
 (*Question 22*)
 
-(*let est_libre_seg (c1:case) (c2:case) (conf:configuration) : bool =
+let est_libre_seg (c1:case) (c2:case) (conf:configuration) : bool =
   let vect_unit, distance = vect_et_dist c1 c2 in
   let vx, vy, vz = vect_unit in
-  let cx, cy, cz = c1 in
-  let rec seg_libre c1 conf distance =
+  let rec seg_libre (c1:case) (conf:configuration) (distance:int) : bool =
     match distance with
+    | -1 -> false
     | 0 -> true
     | _ -> if associe c1 conf = Libre then
         let cx, cy, cz = c1 in
         let cx2 = cx + vx in 
         let cy2 = cy + vy in 
         let cz2 = cz + vz in
-        seg_libre (cx2, cy2, cz2) conf (distance - 1)
+        let distance1 = distance - 1 in
+        seg_libre (cx2,cy2,cz2) conf distance1 in
       else
-        false
-  
-  seg_libre vx+cx,vy+cy,vz+cz conf (distance - 1);;*)
+        let distance1 = -1 in
+        seg_libre c1 conf distance1 in 
+  let cx, cy, cz = c1 in
+  let c1x = vx + cx in 
+  let c1y = vy + cy in 
+  let c1z = vz + cz in
+  let distance1 = distance + 1 in
+  seg_libre (c1x,c1y,c1z) conf distance1 ;;
 
 (*Question 23*)
 
