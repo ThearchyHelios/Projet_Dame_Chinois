@@ -257,27 +257,27 @@ let pair x =
  *)
 
 
-let calcul_pivot (c1:case) (c2:case) =
+let calcul_pivot (c1:case) (c2:case) : case =
   let d = diff_case_positive c1 c2 in
   let x, y, z = d in
   let x1, y1, z1 = c1 in
   let x2, y2, z2 = c2 in
   if x = 0 && y = 0 && z = 0 then
-    None
+    failwith("Il n'y a pas de reponses")
   else
     if x = y && x != 0 && z = 0 && pair x then
-      Some((x1 + x2) / 2, (y1 + y2) / 2, z1)
+      (x1 + x2) / 2, (y1 + y2) / 2, z1
     else
       if x = z && x != 0 && y = 0 && pair x then
-        Some((x1 + x2) / 2, y1, (z1 + z2) / 2)
+        (x1 + x2) / 2, y1, (z1 + z2) / 2
       else
         if y = z && y != 0 && x = 0 && pair y then
-          Some(x1, (y1 + y2) / 2, (z1 + z2) / 2)
+          x1, (y1 + y2) / 2, (z1 + z2) / 2
         else
-          None;;
+          failwith("Il n'y a pas de reponses");;
 
 calcul_pivot (3,3, -6) (3, -5, 2);;
-assert(calcul_pivot (3,3, -6) (3, -5, 2) = Some (3, -1, -2));;
+assert(calcul_pivot (3,3, -6) (3, -5, 2) = (3, -1, -2));;
 
 
 (* Question 9 *)
@@ -292,26 +292,26 @@ assert(calcul_pivot (3,3, -6) (3, -5, 2) = Some (3, -1, -2));;
  *                 vec_et_dist (3, 2, -5) (1, 2, 3) = Some ((-1, 0, 1), 2)
  *)
 
-let vec_et_dist (c1:case) (c2:case) =
+let vec_et_dist (c1:case) (c2:case) : case*dimension =
   let d = diff_case_positive c1 c2 in
   let x, y, z = d in
   let x1, y1, z1 = c1 in
   let x2, y2, z2 = c2 in
   if x = 0 && y = 0  && z = 0 then
-    None
+    failwith("Il n'y a pas de reponse")
   else
     if x = 0 then
-      Some((0,(y2 - y1) / y, (z2 - z1) / z), y)
+      (0,(y2 - y1) / y, (z2 - z1) / z), y
     else
       if y = 0 then
-        Some(((x2 - x1) / x, 0, (z2 - z1) / z), x)
+        ((x2 - x1) / x, 0, (z2 - z1) / z), x
     else
       if z = 0 then
-        Some(((x2 - x1) / x, (y2 - y1) / y, 0), x)
+        ((x2 - x1) / x, (y2 - y1) / y, 0), x
     else
-      None;;
+      failwith("Il n'y a pas de reponse");;
 
-assert(vec_et_dist (-3, -2, 5) (-3, 5, -2) = Some ((0, 1, -1), 7));;
+assert(vec_et_dist (-3, -2, 5) (-3, 5, -2) = ((0, 1, -1), 7));;
 
 
 (* Question 10*)
@@ -510,6 +510,78 @@ let supprime_dans_config (conf:configuration) (c:case) : configuration =
         [pr]@(suppr fin) in
   (suppr list_case), list_couleur, dim ;;
 
+
+(*Question 22*)
+
+let est_libre_seg (c1:case) (c2:case) (conf:configuration) : bool =
+  let vect_unit, distance = vec_et_dist c1 c2 in
+  let vx, vy, vz = vect_unit in
+  let rec seg_libre (c1:case) (conf:configuration) (distance:int) : bool =
+    match distance with
+    | -1 -> false
+    | 0 -> true
+    | _ -> if (associe c1 conf) = Libre then
+        let distance1 = distance - 1 in
+        let cx, cy, cz = c1 in
+        let cx2 = cx + vx in 
+        let cy2 = cy + vy in 
+        let cz2 = cz + vz in
+        seg_libre (cx2,cy2,cz2) conf distance1
+      else
+        let distance1 = -1 in
+        seg_libre c1 conf distance1 in
+  let cx, cy, cz = c1 in
+  let c1x = vx + cx in 
+  let c1y = vy + cy in 
+  let c1z = vz + cz in
+  let distance1 = distance + 1 in
+  seg_libre (c1x,c1y,c1z) conf distance1 ;;
+
+(*Question 23*)
+
+let est_saut (c1:case) (c2:case) (conf:configuration) : bool =
+  if associe c2 conf = Libre then
+    let list_case, list_color, dim = conf in
+    if associe c1 conf = List.hd list_color then
+      let vect_unit, distance_c1_c2 = vec_et_dist c1 c2 in
+      if distance_c1_c2 mod 2 != 0 then 
+        let pivot = calcul_pivot c1 c2 in
+        if associe pivot conf != Libre then
+          if est_libre_seg c1 pivot conf then
+            if est_libre_seg pivot c2 conf then
+              true
+            else
+              false 
+          else
+            false
+        else
+          false
+      else
+        false
+    else
+      false
+  else
+    false;;
+
+
+(*Question 24*)
+
+let est_saut_multiple (list_coup:case list) (conf:configuration) : bool =
+  let longueur = List.length list_coup in 
+  let rec test list_coup conf i =
+    match i with 
+    | longueur -> true
+    | -1 -> false
+    | _ -> let c1 = List.nth list_coup i in 
+      let c2 = List.nth list_coup (i+1) in
+      if est_saut c1 c2 conf then 
+        let i1 = i + 1 in
+        test list_coup conf i1
+      else
+        let i1 = -1 in
+        test list_coup conf i1 in
+  test list_coup conf 0 ;;
+
 (*Question 19*)
 
 (* JUSTE *)
@@ -529,7 +601,7 @@ let est_coup_valide (conf:configuration) (a:coup) : bool =
           false
       else
         false
-    | Sm k -> failwith("Coups multiples non implementes");;
+    | Sm k -> est_saut_multiple k conf;;
 
 (*Question 20*)
 
@@ -552,58 +624,3 @@ let mettre_a_jour_configuration (conf:configuration) (cp:coup) : configuration =
     else
       conf
   | Sm k -> failwith("Sauts multiples non implementes");;
-
-(*Question 22*)
-
-let est_libre_seg (c1:case) (c2:case) (conf:configuration) : bool =
-  let vect_unit, distance = vect_et_dist c1 c2 in
-  let vx, vy, vz = vect_unit in
-  let rec seg_libre (c1:case) (conf:configuration) (distance:int) : bool =
-    match distance with
-    | -1 -> false
-    | 0 -> true
-    | _ -> if associe c1 conf = Libre then
-        let cx, cy, cz = c1 in
-        let cx2 = cx + vx in 
-        let cy2 = cy + vy in 
-        let cz2 = cz + vz in
-        let distance1 = distance - 1 in
-        seg_libre (cx2,cy2,cz2) conf distance1 in
-      else
-        let distance1 = -1 in
-        seg_libre c1 conf distance1 in 
-  let cx, cy, cz = c1 in
-  let c1x = vx + cx in 
-  let c1y = vy + cy in 
-  let c1z = vz + cz in
-  let distance1 = distance + 1 in
-  seg_libre (c1x,c1y,c1z) conf distance1 ;;
-
-(*Question 23*)
-
-(*let est_saut (c1:case) (c2:case) (conf:configuration) : bool =
-  if associe c2 conf = Libre then
-    let list_case, list_color, dim = conf in
-    if associe c1 conf = List.hd list_color then
-      let vect_unit, distance_c1_c2 = vect_et_dist c1 c2 in
-      if distance_c1_c2 mod 2 != 0 then (*Si distance pair il ne peut pas avoir de pivot*) then
-        let pivot = calcul_pivot c1 c2 in
-        if associe pivot conf != libre then
-          if est_libre_seg
-
-
-      
-
-
-
-if associe (vx+cx,vy+cy,vz+cz) conf != Libre then 
-         if associe c1 conf = List.hd list_color 
-            true 
-          else
-            false 
-        else
-          false
-      else
-        false 
-    else
-      false;;*)
