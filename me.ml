@@ -637,3 +637,4 @@ let mettre_a_jour_configuration (conf:configuration) (cp:coup) : configuration =
       conf ;;
 
 
+(*Question 26*)
