@@ -321,7 +321,7 @@ let tourner_list liste =
   let last = List.tl liste in
   last @ [first];;
 
-assert( tourner_list [1; 2; 3] = [2; 3; 1] );;
+tourner_list [1;2;3];;
 
 let der_liste liste =
   let length = List.length liste in
@@ -354,13 +354,6 @@ let remplir_segment (a:int) (case:case) =
 remplir_segment 1 (0, 0, 0);;
 remplir_segment 3 (-4, 1, 3);;
 
-(* Question 12 *)
-
-est_dans_etoile (-3, 4, -1) 3;;
-
-(*part du coin en bas à gauche*)
-
-
 let rec remplir_segment_refaire (a:int) (case:case) =
   let x, y, z = case in
   match a with
@@ -372,6 +365,9 @@ remplir_segment_refaire 3 (-4, 1, 3);;
 
 (* Question 12 *)
 
+est_dans_etoile (-3, 4, -1) 3;;
+
+
 let remplir_triangle_bas (a:int) (case:case) =
   let x, y, z = case in
   match a with
@@ -382,27 +378,15 @@ let remplir_triangle_bas (a:int) (case:case) =
       | _ -> let rec remplir_triangle_bas_rec_bis return_list_c c =
                 match c with
                 | 0 -> return_list_c
-                | _ -> remplir_triangle_bas_rec_bis (List.cons (x - c + 1, - x - z + b - 1 , z - b + c) return_list_c) (c - 1) in
+                | _ -> remplir_triangle_bas_rec_bis (List.cons (x + c - 1, y + b - c, - x - y - b + 1) return_list_c) (c - 1) in
           remplir_triangle_bas_rec ((remplir_triangle_bas_rec_bis return_list_b (b))) (b - 1) in
     remplir_triangle_bas_rec [] (a);;
 
-remplir_triangle_bas 3 (3, 1, -4);;
 
-
-
-(* let rec remplir_triangle_bas_test (m:int) (cases:case) =
-    let x, y, z = cases in
-    match m with
-    | 0 -> [(x, y, z)]
-    | _ -> List.cons (x + m - 1, y, - x - y - m + 1) (remplir_triangle_bas_test (m-1) cases) *)
-
-
+remplir_triangle_bas 3 (-3, 4, -1);;
 
 (* Question 13 *)
-
-est_dans_etoile (-3, 4, -1) 3;;
-
-
+(* inverser les deux fonctions, triangle_bas fais le haut, triangle_haut fais le bas*)
 let remplir_triangle_haut (a:int) (case:case) =
   let x, y, z = case in
   match a with
@@ -413,12 +397,11 @@ let remplir_triangle_haut (a:int) (case:case) =
       | _ -> let rec remplir_triangle_haut_rec_bis return_list_c c =
                 match c with
                 | 0 -> return_list_c
-                | _ -> remplir_triangle_haut_rec_bis (List.cons (x + c - 1, y + b - c, - x - y - b + 1) return_list_c) (c - 1) in
+                | _ -> remplir_triangle_haut_rec_bis (List.cons (x - c + 1, - x - z + b - 1 , z - b + c) return_list_c) (c - 1) in
           remplir_triangle_haut_rec ((remplir_triangle_haut_rec_bis return_list_b (b))) (b - 1) in
     remplir_triangle_haut_rec [] (a);;
 
-
-remplir_triangle_haut 3 (-3, 4, -1);;
+remplir_triangle_haut 3 (3, 1, -4);;
 
 
 (* Question 14 *)
@@ -429,15 +412,19 @@ type case_coloree = case * couleur;;
 
 type configuration = case_coloree list * couleur list * dimension;;
 
+(* JUSTE *)
+let colorie (color:couleur) (list_case:case list) : case_coloree list =
+  let rec list_case_coloree return_list list_case color =
+    match list_case with
+    | [] -> return_list
+    | pr :: fin -> let couple = [(pr, color)]@return_list in
+      list_case_coloree couple fin color in
+  list_case_coloree [((List.hd list_case),color)] (List.tl list_case) color;;
 
-let rec colorie (coul:couleur) (lc:case list) : case_coloree list =
-  match lc with
-  | [] -> []
-  | (pr::fin) -> List.cons (pr, coul) (colorie coul fin);;
+(* let colorie_2 (color:couleur) (cs:case list) : case_coloree list =
 
+;; *)
 
-(* test *)
-assert( colorie Bleu [(3,2,1);(7,5,6)] = [((7, 5, 6), Bleu); ((3, 2, 1), Bleu)]);;
 
 (* Question 15 *)
 (* JUSTE *)
@@ -450,40 +437,78 @@ let tourner_config (config:configuration) : configuration =
     | [] -> return_list
     | pr :: fin -> let case, couleur = pr in
       tourner_case_list (List.cons (tourner_case case tour_tourner, couleur) return_list) fin in
-  tourner_case_list [] case_coloree, couleur_list, dimension;;
+  tourner_case_list [] case_coloree, tourner_list couleur_list, dimension;;
+
+tourner_config ( [(1,2,-3), Bleu], [Bleu; Rouge; Vert], 3);;  
+
+(*Question 16*)
+
+type liste_joueur = couleur list ;;
+
+(* JUSTE *)
+let remplir_init_2 (a:liste_joueur) (dim:dimension) : configuration =
+  let longueur = List.length a in
+    match longueur with
+    | 1 -> let triangle_sud = remplir_triangle_bas dim (-4,1,3) in
+      let case_color_sud = colorie (List.nth a 0) triangle_sud in
+      case_color_sud, a, dim
+    | 2 -> let triangle_sud = remplir_triangle_bas dim (-4,1,3) in
+      let case_color_sud = colorie (List.nth a 0) triangle_sud in
+      let triangle_nord = remplir_triangle_haut dim (4,-3,-1) in
+      let case_color_nord = colorie (List.nth a 1) triangle_nord in
+      case_color_sud@case_color_nord, a, dim
+    | 3 -> let triangle_sud = remplir_triangle_bas dim (-4,1,3) in
+      let case_color_sud = colorie (List.nth a 0) triangle_sud in
+      let triangle_nord_ouest = remplir_triangle_bas dim (3,-6,3) in
+      let case_color_nord_ouest = colorie (List.nth a 1) triangle_nord_ouest in
+      let triangle_nord_est = remplir_triangle_bas dim (3,1,-4) in
+      let case_color_nord_est = colorie (List.nth a 2) triangle_nord_est in
+      case_color_sud@case_color_nord_ouest@case_color_nord_est, a, dim
+    | 6 -> let triangle_sud = remplir_triangle_bas dim (-4,1,3) in
+      let case_color_sud = colorie (List.nth a 0) triangle_sud in
+      let triangle_sud_ouest = remplir_triangle_haut dim (-3,-3,6) in
+      let case_color_sud_ouest = colorie (List.nth a 1) triangle_sud_ouest in
+      let triangle_nord_ouest = remplir_triangle_bas dim (3,-6,3) in
+      let case_color_nord_ouest = colorie (List.nth a 2) triangle_nord_ouest in
+      let triangle_nord = remplir_triangle_haut dim (4,-3,-1) in
+      let case_color_nord = colorie (List.nth a 3) triangle_nord in
+      let triangle_nord_est = remplir_triangle_bas dim (3,1,-4) in
+      let case_color_nord_est = colorie (List.nth a 4) triangle_nord_est in
+      let triangle_sud_est = remplir_triangle_haut dim (-3,4,-1) in
+      let case_color_sud_est = colorie (List.nth a 5) triangle_sud_est in
+      case_color_sud@case_color_sud_ouest@case_color_nord_ouest@case_color_nord@case_color_nord_est@case_color_sud_est, a, dim
+    | _ -> failwith("Nombre de joueurs invalides");;
+(* remplir_init ["Kil";"Man"] 3 *)
 
 
-tourner_config ( [(1,2,-3), Bleu], [Bleu; Rouge; Vert], 3);;
+(*Question 17*)
+(* JUSTE *)
+let associe (a:case) (config:configuration) : couleur =
+  let list_case, list_couleur, dim = config in
+  let rec case_in_list list_case =
+    match list_case with
+    | [] -> Libre
+    | pr::fin -> let case_1, couleur = pr in
+      if case_1 = a
+         then couleur
+      else
+        case_in_list fin in
+  case_in_list list_case ;;
 
-(* Question 16 *)
+(*Question 18*)
 
-let list_joueur_init () =
-  let () = print_string "Type the number of player:" in
-  let nombre_joueur = read_int() in
-  match nombre_joueur with
-  | 0 -> failwith "Il faut au moins un joueur"
-  | _ -> let rec list_joueur_init_rec return_list n =
-           match n with
-           | 0 -> return_list
-           | n -> let () = print_string "Type the name of player:" in
-             let nom_joueur = read_line() in
-             list_joueur_init_rec (List.cons (nom_joueur) return_list) (n-1) in
-    list_joueur_init_rec [] nombre_joueur;;
-
-(* list_joueur_init();; *)
-
-(* let list_joueur_couleur_init liste_joueur couleur=
-   let choose l = 
-    let rand = Random.int (List.length l) in 
-    List.nth l rand in
-   let rec list_joueur_couleur_init_rec return_list liste_joueur =
-    match liste_joueur with
-    | [] -> return_list
-    | pr :: fin -> let nom_joueur = pr in
-      list_joueur_couleur_init_rec (List.cons (nom_joueur, choose couleur) return_list) fin in
-   list_joueur_couleur_init_rec [] liste_joueur;;
-
-   list_joueur_couleur_init ["joueur1", "joueur2", "joueur3"] [Vert; Jaune; Rouge; Bleu; Marron];; *)
+(* JUSTE *)
+let supprime_dans_config (conf:configuration) (c:case) : configuration =
+  let list_case, list_couleur, dim = conf in
+  let rec suppr list_case =
+    match list_case with
+    | [] -> []
+    | pr::fin -> let case, couleur = pr in
+      if case = c then
+        suppr fin
+      else
+        [pr]@(suppr fin) in
+  (suppr list_case), list_couleur, dim ;;
 
 (*Question 19*)
 
@@ -491,14 +516,88 @@ let list_joueur_init () =
 
 type coup = Du of case * case | Sm of case list;;
 
-(* let rec remplir_init  *)
+let est_coup_valide (conf:configuration) (a:coup) : bool =
+  let list_case, list_couleur, dim = conf in
+  match a with
+    | Du(c1,c2) -> if sont_cases_voisines c1 c2 then
+        if (associe c1 conf) = (List.hd list_couleur) then
+          if associe c2 conf = Libre then
+            est_dans_losange c2 dim
+          else
+            false
+        else
+          false
+      else
+        false
+    | Sm k -> failwith("Coups multiples non implementes");;
 
 (*Question 20*)
 
 (* JUSTE *)
+
+let appliquer_coup (conf:configuration) (a:coup) : configuration =
+  match a with
+    | Du(c1,c2) -> let conf1 = supprime_dans_config conf c1 in
+      let list_case, list_couleur, dim = conf1 in
+      let list_case1 = list_case @ [c2,(List.nth list_couleur 0)] in
+      list_case1, list_couleur, dim
+    | Sm k -> failwith("Sauts multiples non implementes");;
+
+(*Question 21*)
+
+let mettre_a_jour_configuration (conf:configuration) (cp:coup) : configuration =
+  match cp with
+  | Du(c1,c2) -> if est_coup_valide conf cp then
+      appliquer_coup conf cp
+    else
+      conf
+  | Sm k -> failwith("Sauts multiples non implementes");;
+
+(*Question 22*)
+
+(*let est_libre_seg (c1:case) (c2:case) (conf:configuration) : bool =
+  let vect_unit, distance = vect_et_dist c1 c2 in
+  let vx, vy, vz = vect_unit in
+  let cx, cy, cz = c1 in
+  let rec seg_libre c1 conf distance =
+    match distance with
+    | 0 -> true
+    | _ -> if associe c1 conf = Libre then
+        let cx, cy, cz = c1 in
+        let cx2 = cx + vx in 
+        let cy2 = cy + vy in 
+        let cz2 = cz + vz in
+        seg_libre (cx2, cy2, cz2) conf (distance - 1)
+      else
+        false
+  
+  seg_libre vx+cx,vy+cy,vz+cz conf (distance - 1);;*)
+
+(*Question 23*)
+
+(*let est_saut (c1:case) (c2:case) (conf:configuration) : bool =
+  if associe c2 conf = Libre then
+    let list_case, list_color, dim = conf in
+    if associe c1 conf = List.hd list_color then
+      let vect_unit, distance_c1_c2 = vect_et_dist c1 c2 in
+      if distance_c1_c2 mod 2 != 0 then (*Si distance pair il ne peut pas avoir de pivot*) then
+        let pivot = calcul_pivot c1 c2 in
+        if associe pivot conf != libre then
+          if est_libre_seg
 
 
       
 
 
 
+if associe (vx+cx,vy+cy,vz+cz) conf != Libre then 
+         if associe c1 conf = List.hd list_color 
+            true 
+          else
+            false 
+        else
+          false
+      else
+        false 
+    else
+      false;;*)
