@@ -568,7 +568,7 @@ let est_saut (c1:case) (c2:case) (conf:configuration) : bool =
 
 let est_saut_multiple (list_coup:case list) (conf:configuration) : bool =
   let longueur = List.length list_coup in 
-  let rec test list_coup conf i =
+  let rec test list_coup conf i longueur =
     match i with 
     | longueur -> true
     | -1 -> false
@@ -576,11 +576,11 @@ let est_saut_multiple (list_coup:case list) (conf:configuration) : bool =
       let c2 = List.nth list_coup (i+1) in
       if est_saut c1 c2 conf then 
         let i1 = i + 1 in
-        test list_coup conf i1
+        test list_coup conf i1 longueur
       else
         let i1 = -1 in
-        test list_coup conf i1 in
-  test list_coup conf 0 ;;
+        test list_coup conf i1 longueur in
+  test list_coup conf longueur 0 ;;
 
 (*Question 25*)
 
@@ -637,4 +637,30 @@ let mettre_a_jour_configuration (conf:configuration) (cp:coup) : configuration =
       conf ;;
 
 
+
+(* Essayer de JIANG Yilun du Question 26*)
+(* Il faut utiliser List.forall, List.exists *)
+(*let score (conf:configuration) : int =
+  let list_case, list_couleur, dim = conf in*)
+  
+  
+
+
+  (* pas fini *)
+
+
+
+let score_gagnant (dim:dimension) : int =
+  let triangle_nord = remplir_triangle_bas dim (dim + 1,- dim , - 1) in
+  let coord_i_de_x x =
+    let i, j, k = x in
+    i
+  let list_i = List.map coord_i_de_x triangle_nord in
+  let addition x y = 
+    x + y
+  let score_gagne = List.fold_left addition 0 liste in
+  score_gagne;;
+
 (*Question 26*)
+
+  
