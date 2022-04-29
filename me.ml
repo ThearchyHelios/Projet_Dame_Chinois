@@ -582,6 +582,8 @@ let est_saut_multiple (list_coup:case list) (conf:configuration) : bool =
         test list_coup conf i1 in
   test list_coup conf 0 ;;
 
+(*Question 25*)
+
 (*Question 19*)
 
 (* JUSTE *)
@@ -629,4 +631,9 @@ let mettre_a_jour_configuration (conf:configuration) (cp:coup) : configuration =
       appliquer_coup conf cp
     else
       conf
-  | Sm k -> failwith("Sauts multiples non implementes");;
+  | Sm k -> if est_coup_valide conf cp then 
+      appliquer_coup conf cp 
+    else
+      conf ;;
+
+
