@@ -613,7 +613,13 @@ let appliquer_coup (conf:configuration) (a:coup) : configuration =
       let list_case, list_couleur, dim = conf1 in
       let list_case1 = list_case @ [c2,(List.nth list_couleur 0)] in
       list_case1, list_couleur, dim
-    | Sm k -> failwith("Sauts multiples non implementes");;
+    | Sm k -> let c1 = List.hd k in 
+      let longueur = List.length k in 
+      let c2 = List.nth k (longueur-1) in 
+      let conf1 = supprime_dans_config conf c1 in
+      let list_case, list_couleur, dim = conf1 in
+      let list_case1 = list_case @ [c2,(List.nth list_couleur 0)] in
+      list_case1, list_couleur, dim ;;
 
 (*Question 21*)
 
