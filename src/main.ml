@@ -2,6 +2,8 @@ type case = int * int * int  (*restreint au triplet tels (i,j,k) tels que i+j+k=
 type dimension = int;;
 let dimension = 3;;
 
+let nb_jours = 6;;
+
 (* Question 1 *)
 
 (* SPÉCIFICATION : check_direction
@@ -314,45 +316,32 @@ assert(vec_et_dist (-3, -2, 5) (-3, 5, -2) = Some ((0, 1, -1), 7));;
 
 (* Question 10*)
 
-let tourner_liste liste =
+let tourner_list liste =
   let first = List.hd liste in
   let last = List.tl liste in
   last @ [first];;
 
-<<<<<<< Updated upstream
-tourner_liste [1;2;3];;
-=======
 assert( tourner_list [1; 2; 3] = [2; 3; 1] );;
->>>>>>> Stashed changes
 
 let der_liste liste =
   let length = List.length liste in
-  if length==0 then failwith "liste vide" else List.nth liste (length-1) ;;
+  List.nth liste (length-1) ;;
 
-der_liste [1;2;3;5];;
-assert(der_liste [1;2;3] = 3);;
-der_liste ["Vert"; "Rouge"; "Jaune"; "Bleu"];;
-
-let rec dernier_element_list list =
+let rec derniere_element_list list =
   match list with
   | [] -> failwith "liste vide"
   | [x] -> x
-  | pr::fin -> dernier_element_list fin;;
+  | pr::fin -> derniere_element_list fin;;
 
-dernier_element_list [1;2;3;5];;
-dernier_element_list["Vert"; "Rouge"; "Jaune"; "Bleu"];;
+derniere_element_list [1;2;3;5];;
 
-(*Nous avions choisi de coder la fonction demandée de deux facons différentes mais nous utiliserons uniquement der_liste*)
+der_liste [1;2;3;5];;
+assert(der_liste [1;2;3] = 3);;
+
+derniere_element_list["Vert"; "Rouge"; "Jaune"; "Bleu"];;
 
 
 (* Question 11 *)
-
-(* let rec remplir_segment (m:int) (cases:case) : case list =
-  let x, y, z = cases in 
-  match m with
-  | 0 -> []
-  | _ -> List.cons (x, y + m - 1, z - m + 1) (remplir_segment (m-1) cases)
-;; *)
 
 let remplir_segment (a:int) (case:case) =
   let x, y, z = case in
@@ -360,32 +349,19 @@ let remplir_segment (a:int) (case:case) =
     match a with
     | 0 -> return_list
     | _ -> remplir_segment_rec (List.cons (x, y + a - 1, z - a + 1) return_list) (a - 1) in
-  remplir_segment_rec [] a
-;;
+  remplir_segment_rec [] a;;
 
-(*test juste en dessous*)
-remplir_segment 3 (-1, 4, -3);;
 remplir_segment 1 (0, 0, 0);;
 remplir_segment 3 (-4, 1, 3);;
 
-(* Question 12 *)
-
-est_dans_etoile (-3, 4, -1) 3;;
-
-(*part du coin en bas à gauche*)
-
-=======
 let rec remplir_segment_refaire (a:int) (case:case) =
   let x, y, z = case in
   match a with
   | 0 -> []
-  | _ -> List.cons (x, y + a - 1, z - a + 1) (remplir_segment_refaire (a - 1) (case))
-;;
+  | _ -> List.cons (x, y + a - 1, z - a + 1) (remplir_segment_refaire (a - 1) (case));;
 
-
-(* test juste en dessous *)
 remplir_segment_refaire 3 (-4, 1, 3);;
-remplir_segment_refaire 3 (-1, 4, -3);;
+
 
 (* Question 12 *)
 
@@ -393,35 +369,17 @@ let remplir_triangle_bas (a:int) (case:case) =
   let x, y, z = case in
   match a with
   | 0 -> [(x, y, z)]
-  | _ -> let rec remplir_triangle_haut_rec return_list_b b =
+  | _ -> let rec remplir_triangle_bas_rec return_list_b b =
       match b with
       | 0 -> return_list_b
-      | _ -> let rec remplir_triangle_haut_rec_bis return_list_c c =
+      | _ -> let rec remplir_triangle_bas_rec_bis return_list_c c =
                 match c with
                 | 0 -> return_list_c
-<<<<<<< Updated upstream
-                | _ -> remplir_triangle_haut_rec_bis (List.cons (x - c + 1, - x - z + b - 1 , z - b + c) return_list_c) (c - 1) in
-          remplir_triangle_haut_rec ((remplir_triangle_haut_rec_bis return_list_b (b))) (b - 1) in
-    remplir_triangle_haut_rec [] (a);;
-
-remplir_triangle_bas 3 (3, 1, -4);;
-
-
-
-let rec remplir_triangle_bas_test (m:int) (cases:case) =
-    let x, y, z = cases in
-    match m with
-    | 0 -> [(x, y, z)]
-    | _ -> List.cons (x + m - 1, y, - x - y - m + 1) (remplir_triangle_bas_test (m-1) cases)
-
-
-=======
                 | _ -> remplir_triangle_bas_rec_bis (List.cons (x - c + 1, - x - z + b - 1 , z - b + c) return_list_c) (c - 1) in
           remplir_triangle_bas_rec ((remplir_triangle_bas_rec_bis return_list_b (b))) (b - 1) in
     remplir_triangle_bas_rec [] (a);;
 
 remplir_triangle_bas 3 (3, 1, -4);;
->>>>>>> Stashed changes
 
 (* Question 13 *)
 
@@ -432,26 +390,17 @@ let remplir_triangle_haut (a:int) (case:case) =
   let x, y, z = case in
   match a with
   | 0 -> [(x, y, z)]
-  | _ -> let rec remplir_triangle_bas_rec return_list_b b =
+  | _ -> let rec remplir_triangle_haut_rec return_list_b b =
       match b with
       | 0 -> return_list_b
-      | _ -> let rec remplir_triangle_bas_rec_bis return_list_c c =
+      | _ -> let rec remplir_triangle_haut_rec_bis return_list_c c =
                 match c with
                 | 0 -> return_list_c
-<<<<<<< Updated upstream
-                | _ -> remplir_triangle_bas_rec_bis (List.cons (x + c - 1, y + b - c, - x - y - b + 1) return_list_c) (c - 1) in
-          remplir_triangle_bas_rec ((remplir_triangle_bas_rec_bis return_list_b (b))) (b - 1) in
-    remplir_triangle_bas_rec [] (a);;
-
-
-remplir_triangle_haut 3 (3, 1, -4);;
-=======
                 | _ -> remplir_triangle_haut_rec_bis (List.cons (x + c - 1, y + b - c, - x - y - b + 1) return_list_c) (c - 1) in
           remplir_triangle_haut_rec ((remplir_triangle_haut_rec_bis return_list_b (b))) (b - 1) in
     remplir_triangle_haut_rec [] (a);;
 
 
->>>>>>> Stashed changes
 remplir_triangle_haut 3 (-3, 4, -1);;
 
 
@@ -463,20 +412,6 @@ type case_coloree = case * couleur;;
 
 type configuration = case_coloree list * couleur list * dimension;;
 
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
-let rec colorie (coul:couleur) (lc:case list) : case_coloree list =
-  match lc with
-  | [] -> []
-  | (pr::fin) -> List.cons (pr, coul) (colorie coul fin);;
-
-
-colorie (Vert) [(1,1,1);(2,2,2);(3,3,3)] ;;
-
->>>>>>> Stashed changes
-(* Question 15 *)
-=======
 (* JUSTE *)
 let colorie (color:couleur) (list_case:case list) : case_coloree list =
   let rec list_case_coloree return_list list_case color =
@@ -486,7 +421,6 @@ let colorie (color:couleur) (list_case:case list) : case_coloree list =
       list_case_coloree couple fin color in
       list_case_coloree [((List.hd list_case),color)] (List.tl list_case) color
 ;;
->>>>>>> Stashed changes
 
 (* test *)
 assert( colorie Bleu [(3,2,1);(7,5,6)] = [((7, 5, 6), Bleu); ((3, 2, 1), Bleu)]);;
@@ -507,44 +441,10 @@ let tourner_config (config:configuration) : configuration =
 (*test*)
 tourner_config ( [(1,2,-3), Bleu], [Bleu; Rouge; Vert], 3);;  
 
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
-tourner_config ( [(1,2,-3), Bleu], [Bleu; Rouge; Vert], 3);;
-=======
 assert( tourner_config ( [(1,2,-3), Bleu], [Bleu; Rouge; Vert], 3) = ([((-2, 3, -1), Bleu)], [Rouge; Vert; Bleu], 3));;  
->>>>>>> Stashed changes
 
+(*Question 16*)
 
-<<<<<<< Updated upstream
-(* Question 16 *)
-
-let list_joueur_init () =
-  let () = print_string "Type the number of player:" in
-  let nombre_joueur = read_int() in
-  match nombre_joueur with
-  | 0 -> failwith "Il faut au moins un joueur"
-  | _ -> let rec list_joueur_init_rec return_list n =
-           match n with
-           | 0 -> return_list
-           | n -> let () = print_string "Type the name of player:" in
-             let nom_joueur = read_line() in
-             list_joueur_init_rec (List.cons (nom_joueur) return_list) (n-1) in
-    list_joueur_init_rec [] nombre_joueur;;
-
-(* list_joueur_init();; *)
-
-(* let list_joueur_couleur_init liste_joueur couleur=
-   let choose l = 
-    let rand = Random.int (List.length l) in 
-    List.nth l rand in
-   let rec list_joueur_couleur_init_rec return_list liste_joueur =
-    match liste_joueur with
-    | [] -> return_list
-    | pr :: fin -> let nom_joueur = pr in
-      list_joueur_couleur_init_rec (List.cons (nom_joueur, choose couleur) return_list) fin in
-   list_joueur_couleur_init_rec [] liste_joueur;;
-=======
 type liste_joueur = couleur list ;;
 
 (* JUSTE *)
@@ -584,11 +484,11 @@ let remplir_init_2 (a:liste_joueur) (dim:dimension) : configuration =
   ;;
 
 (*test*)
-assert ( remplir_init_2 [Bleu;Rouge] 3 = ([((-6, 3, 3), Bleu); ((-5, 3, 2), Bleu); ((-4, 3, 1), Bleu);
+assert ( remplir_init_2 [Bleu;Rouge] 3 = ( [((-6, 3, 3), Bleu); ((-5, 3, 2), Bleu); ((-4, 3, 1), Bleu);
                                            ((-5, 2, 3), Bleu); ((-4, 2, 2), Bleu); ((-4, 1, 3), Bleu);
                                            ((6, -3, -3), Rouge); ((5, -2, -3), Rouge); ((4, -1, -3), Rouge);
                                            ((5, -3, -2), Rouge); ((4, -2, -2), Rouge); ((4, -3, -1), Rouge)],
-                                                                                            [Bleu; Rouge], 3) );;
+                                                                                         [Bleu; Rouge], 3) );;
 
 
 (*Question 17*)
@@ -619,45 +519,9 @@ let supprime_dans_config (conf:configuration) (c:case) : configuration =
       else
         [pr]@(suppr fin) in
   (suppr list_case), list_couleur, dim ;;
->>>>>>> Stashed changes
 
-   list_joueur_couleur_init ["joueur1", "joueur2", "joueur3"] [Vert; Jaune; Rouge; Bleu; Marron];; *)
+(*Question 19*)
 
-<<<<<<< Updated upstream
-
-let remplir_init (list_joueur) dimension =
-  let rec remplir_init_rec return_list list_joueur =
-    match list_joueur with
-    | [] -> return_list
-    | pr :: fin -> let nom_joueur = pr in
-    (* Printf.printf "Type the color of player %s: Vert (1) Jaune (2) Rouge (3) Noir (4) Bleu (5) Marron (6) Code of string (7) Libre (8)" nom_joueur; *)
-    let couleur = read_int() in
-    match couleur with
-    | 1 -> remplir_init_rec (List.cons (nom_joueur, Vert) return_list) fin
-    | 2 -> remplir_init_rec (List.cons (nom_joueur, Jaune) return_list) fin
-    | 3 -> remplir_init_rec (List.cons (nom_joueur, Rouge) return_list) fin
-    | 4 -> remplir_init_rec (List.cons (nom_joueur, Noir) return_list) fin
-    | 5 -> remplir_init_rec (List.cons (nom_joueur, Bleu) return_list) fin
-    | 6 -> remplir_init_rec (List.cons (nom_joueur, Marron) return_list) fin
-    | 7 -> remplir_init_rec (List.cons (nom_joueur, Libre) return_list) fin
-    | 8 -> remplir_init_rec (List.cons (nom_joueur, Libre) return_list) fin
-    | _ -> remplir_init_rec return_list fin in
-  remplir_init_rec [] list_joueur;;
-
-remplir_init (["joueur1"; "joueur2"; "joueur3"]) 3;;
-
-(* Question 17 *)
-
-(* Question 17 *)
-
-(* Question 17 *)
-
-(* Question 17 *)
-
-
-
-(* Question 17 *)
-=======
 (* JUSTE *)
 
 type coup = Du of case * case | Sm of case list;;
@@ -676,15 +540,9 @@ let est_coup_valide (conf:configuration) (a:coup) : bool =
       else
         false
     | Sm k -> failwith("Coups multiples non implementes");;
->>>>>>> Stashed changes
 
+(*Question 20*)
 
-<<<<<<< Updated upstream
-
-(* Question 21 *)
-
->>>>>>> Stashed changes
-=======
 (* JUSTE *)
 
 let appliquer_coup (conf:configuration) (a:coup) : configuration =
@@ -753,4 +611,3 @@ if associe (vx+cx,vy+cy,vz+cz) conf != Libre then
         false 
     else
       false;;*)
->>>>>>> Stashed changes
