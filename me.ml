@@ -580,7 +580,7 @@ let est_saut_multiple (list_coup:case list) (conf:configuration) : bool =
       else
         let i1 = -1 in
         test list_coup conf i1 longueur in
-  test list_coup conf longueur 0 ;;
+  test list_coup conf 0 longueur ;;
 
 (*Question 25*)
 
@@ -649,18 +649,54 @@ let mettre_a_jour_configuration (conf:configuration) (cp:coup) : configuration =
   (* pas fini *)
 
 
+(*Question 26*)
+
+let score (conf:configuration) : int =
+  let list_case, liste_joueur, dim = conf in  
+  let est_case_joueur (c:case_coloree) : bool = (*cette fonction vérifie si la case coloree entrée est bien de la couleur du joueur actuel*)
+    let j1 = List.hd liste_joueur in
+    let c1, color = c in
+    if color = j1 then 
+      true
+    else
+      false in
+  let liste_filtre = List.filter est_case_joueur list_case in
+  let i_de_case_coloree (c:case_coloree) = (*cette fonction renvoit la coordonné i d'une case coloree avec case = (i,j,k)*)
+    let (i, j, k), color = c in
+    i in
+  let list_i = List.map i_de_case_coloree liste_filtre in
+  let addition (x:int) (y:int) : int =
+    x + y in
+  let score = List.fold_left addition 0 list_i in 
+  score ;;
+
+(*Comme il n'est pas possible qu'un joueur n'est aucun pion sur le plateau la fonction renvoit un score de 0 si un joueur n'a pas de pions mais ce n'est pas gênant*)
+assert(score ([(1,2,3),Bleu;(6,8,9),Bleu;(5,-2,-3),Rouge],[Bleu;Rouge],3) = 7);;
 
 let score_gagnant (dim:dimension) : int =
   let triangle_nord = remplir_triangle_bas dim (dim + 1,- dim , - 1) in
-  let coord_i_de_x x =
+  let coord_x_de_i (x:case) : int = (*fait la même chose que la fonction i_de_case_coloree*)
     let i, j, k = x in
-    i
-  let list_i = List.map coord_i_de_x triangle_nord in
-  let addition x y = 
-    x + y
-  let score_gagne = List.fold_left addition 0 liste in
+    i in
+  let list_i = List.map coord_x_de_i triangle_nord in
+  let addition (x:int) (y:int) : int =
+    x + y in
+  let score_gagne = List.fold_left addition 0 list_i in
   score_gagne;;
 
-(*Question 26*)
+assert(score_gagnant 3 = 28);; (*renvoit () car le score gagnant pour une dimension 3 est bien de 28*)
+assert(score_gagnant 3 = 29);; (*renvoit Assert_failure*)
 
-  
+(*Question 27*)
+
+let gagne (conf:configuration) : bool =
+  let score_j = score conf in 
+  let list_case, liste_couleur, dim = conf in 
+  let score_gagne = score_gagnant dim in 
+  score_j = score_gagne;;
+
+assert(gagne ([(28,-28,0),Bleu],[Bleu],3) = true );; (*Renvoit () car le score de bleu est 28*)
+assert(gagne ([(29,-28,0),Bleu],[Bleu],3) = true );; (*Renvoit Assert_failure*)
+
+(*Question 28*)
+
