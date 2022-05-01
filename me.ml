@@ -702,10 +702,19 @@ let rec est_partie (conf:configuration) (coups: coup list) : couleur =
     | [] -> Libre 
     | pr :: fin ->
       match est_coup_valide conf pr with
-      | true -> let conf1 = tourner_config conf in 
-        est_partie (mettre_a_jour_configuration conf1 pr) fin
-      | false -> let conf1 = tourner_config conf in
-        est_partie conf1 fin;;
+      | true -> let conf_1 = mettre_a_jour_configuration conf pr in 
+        let _,liste_couleur,_ = conf_1 in
+        if List.length liste_couleur = 1 then
+          est_partie conf_1 fin
+        else
+          let conf_2 = tourner_config conf_1 in 
+          est_partie conf_2 fin
+      | false -> let _,liste_couleur,_ = conf in
+        if List.length liste_couleur = 1 then
+          est_partie conf fin
+        else
+          let conf_1 = tourner_config conf in 
+          est_partie conf_1 fin;;
 
 (*assert(est_partie ([(4,-3,-1),Bleu;(4,-2,-2),Bleu;(5,-3,-2),Bleu;(5,-2,-3),Bleu;(6,-3,-3),Bleu;(3,0,-3),Bleu],[Bleu],3) [Du((3,0,-3),(4,-1,-3))]=Bleu);;*)
 (*assert(est_partie ([(4,-3,-1),Bleu;(4,-2,-2),Bleu;(5,-3,-2),Bleu;(5,-2,-3),Bleu;(6,-3,-3),Bleu;(3,0,-3),Bleu],[Bleu;Rouge],3) [Du((3,0,-3),(4,-1,-3))]=Libre);;*)
