@@ -128,16 +128,20 @@ assert(est_dans_etoile (0, 0, 0) dimension = true);;
 let tourner_case (c:case) (m:int) : case =
   let x, y, z = c in
   match m with
-  | 1 -> (-y, -z, -x)
-  | 2 -> (z, x, y)
+  | 1 -> (-z, -x, -y)
+  | 2 -> (y, z, x)
   | 3 -> (-x, -y, -z)
-  | 4 -> (-y, z, x)
-  | 5 -> (-z, -x, -y)
+  | 4 -> (z, x, y)
+  | 5 -> (-y, -z, -x)
   | 6 -> (x, y, z)
-  | _ -> c ;; (* pour remplir tous les cas possible avec le match with, mais une valeur autre 1,2,3,4,5 ou 6 ne sera jamais atteinte *)
+  | _ -> c ;;
 
-
-(* assert(tourner_case (-1, 3, -2) 1 = (-3, 2, 1)) *);;
+tourner_case (-4, 1, 3) 1 ;;
+tourner_case (-4, 1, 3) 2 ;;
+tourner_case (-4, 1, 3) 3 ;;
+tourner_case (-4, 1, 3) 4 ;;
+tourner_case (-4, 1, 3) 5 ;;
+tourner_case (-4, 1, 3) 6 ;;
 
 
 (* Question 5 *)
@@ -436,7 +440,7 @@ let tourner_config (config:configuration) : configuration =
       tourner_case_list (List.cons (tourner_case case tour_tourner, couleur) return_list) fin in
   tourner_case_list [] case_coloree, tourner_list couleur_list, dimension;;
 
-assert( tourner_config ([(1,2,-3), Bleu], [Bleu; Rouge; Vert], 3) = ([((-2, 3, -1), Bleu)], [Rouge; Vert; Bleu], 3) );;  
+tourner_config ([(1,2,-3), Bleu], [Bleu; Rouge; Vert], 3) ;;
 
 (*Question 16*)
 
@@ -474,12 +478,15 @@ let remplir_init_2 (a:liste_joueur) (dim:dimension) : configuration =
       let triangle_sud_est = remplir_triangle_haut dim (-dim,dim+1,-1) in
       let case_color_sud_est = colorie (List.nth a 5) triangle_sud_est in
       case_color_sud@case_color_sud_ouest@case_color_nord_ouest@case_color_nord@case_color_nord_est@case_color_sud_est, a, dim
-    | _ -> failwith("Nombre de joueurs invalides");;
-(* remplir_init ["Kil";"Man"] 3 *)
+    | _ -> failwith("Nombre de joueurs invalides")
+  ;;
 
+remplir_init_2 [Bleu;Rouge;Vert] 3 ;; 
 
 (*Question 17*)
 (* JUSTE *)
+(* NB: la fonction quelle_couleur n'est pas implémentée chez nous, 
+   car associe joue déjà son role *)
 let associe (a:case) (config:configuration) : couleur =
   let list_case, list_couleur, dim = config in
   let rec case_in_list list_case =
@@ -490,7 +497,13 @@ let associe (a:case) (config:configuration) : couleur =
          then couleur
       else
         case_in_list fin in
-  case_in_list list_case ;;
+  case_in_list list_case 
+;;
+
+(* Tests *)
+assert( associe (0,0,0) ([((0, 0, 0), Bleu)], [Rouge; Vert; Bleu], 3) = Bleu );;
+assert( associe (1,2,-3) ([((0, 0, 0), Rouge); ((-1,0,1),Jaune)], [Rouge; Jaune; Bleu], 3) = Libre );;
+(* associe (0,0,0) [((-1,0,1),Jaune); ((0,0,0),Vert)] ;; *)
 
 (*Question 18*)
 
