@@ -481,11 +481,7 @@ let remplir_init_2 (a:liste_joueur) (dim:dimension) : configuration =
     | _ -> failwith("Nombre de joueurs invalides")
   ;;
 
-<<<<<<< Updated upstream
-remplir_init_2 [Bleu;Rouge;Vert] 3 ;; 
-=======
 remplir_init_2 [Bleu; Jaune; Vert] 3 ;;
->>>>>>> Stashed changes
 
 (*Question 17*)
 (* JUSTE *)
@@ -504,14 +500,9 @@ let associe (a:case) (config:configuration) : couleur =
   case_in_list list_case 
 ;;
 
-<<<<<<< Updated upstream
 (* Tests *)
 assert( associe (0,0,0) ([((0, 0, 0), Bleu)], [Rouge; Vert; Bleu], 3) = Bleu );;
 assert( associe (1,2,-3) ([((0, 0, 0), Rouge); ((-1,0,1),Jaune)], [Rouge; Jaune; Bleu], 3) = Libre );;
-(* associe (0,0,0) [((-1,0,1),Jaune); ((0,0,0),Vert)] ;; *)
-=======
-assert( associe (3,-2,-1) ([((3,-2,-1), Rouge); ((2,1,-3), Vert)], [Rouge;Vert], 3) = Rouge );;
->>>>>>> Stashed changes
 
 (*Question 18*)
 
