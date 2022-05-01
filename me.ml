@@ -481,7 +481,11 @@ let remplir_init_2 (a:liste_joueur) (dim:dimension) : configuration =
     | _ -> failwith("Nombre de joueurs invalides")
   ;;
 
+<<<<<<< Updated upstream
 remplir_init_2 [Bleu;Rouge;Vert] 3 ;; 
+=======
+remplir_init_2 [Bleu; Jaune; Vert] 3 ;;
+>>>>>>> Stashed changes
 
 (*Question 17*)
 (* JUSTE *)
@@ -500,10 +504,14 @@ let associe (a:case) (config:configuration) : couleur =
   case_in_list list_case 
 ;;
 
+<<<<<<< Updated upstream
 (* Tests *)
 assert( associe (0,0,0) ([((0, 0, 0), Bleu)], [Rouge; Vert; Bleu], 3) = Bleu );;
 assert( associe (1,2,-3) ([((0, 0, 0), Rouge); ((-1,0,1),Jaune)], [Rouge; Jaune; Bleu], 3) = Libre );;
 (* associe (0,0,0) [((-1,0,1),Jaune); ((0,0,0),Vert)] ;; *)
+=======
+assert( associe (3,-2,-1) ([((3,-2,-1), Rouge); ((2,1,-3), Vert)], [Rouge;Vert], 3) = Rouge );;
+>>>>>>> Stashed changes
 
 (*Question 18*)
 
@@ -518,7 +526,10 @@ let supprime_dans_config (conf:configuration) (c:case) : configuration =
         suppr fin
       else
         [pr]@(suppr fin) in
-  (suppr list_case), list_couleur, dim ;;
+  (suppr list_case), list_couleur, dim 
+;;
+
+supprime_dans_config ([((3,-2,-1), Rouge); ((2,1,-3), Vert)], [Rouge;Vert], 3) (2,1,-3) ;;
 
 
 (*Question 22*)
@@ -613,7 +624,11 @@ let est_coup_valide (conf:configuration) (a:coup) : bool =
           false
       else
         false
-    | Sm k -> est_saut_multiple k conf;;
+    | Sm k -> est_saut_multiple k conf
+;;
+
+assert( est_coup_valide ([((3,-2,-1), Rouge); ((2,1,-3), Vert)], [Rouge;Vert], 3) (Du((-4,3,1),(-3,3,0))) = false );;
+assert( est_coup_valide ([((-4,3,1),Rouge); ((-3,3,0), Libre)], [Rouge], 3) (Du((-4,3,1),(-3,3,0))) = true );;
 
 (*Question 20*)
 
@@ -631,7 +646,10 @@ let appliquer_coup (conf:configuration) (a:coup) : configuration =
       let conf1 = supprime_dans_config conf c1 in
       let list_case, list_couleur, dim = conf1 in
       let list_case1 = list_case @ [c2,(List.nth list_couleur 0)] in
-      list_case1, list_couleur, dim ;;
+      list_case1, list_couleur, dim 
+;;
+
+assert( appliquer_coup ([((3,-2,-1), Rouge); ((2,1,-3), Vert)], [Rouge;Vert], 3) (Du((3,-2,-1),(4,-2,-2))) = ([((2, 1, -3), Vert); ((4, -2, -2), Rouge)], [Rouge; Vert], 3) );;
 
 (*Question 21*)
 
