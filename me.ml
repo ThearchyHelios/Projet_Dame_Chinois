@@ -421,10 +421,7 @@ let colorie (color:couleur) (list_case:case list) : case_coloree list =
       list_case_coloree couple fin color in
   list_case_coloree [((List.hd list_case),color)] (List.tl list_case) color;;
 
-(* let colorie_2 (color:couleur) (cs:case list) : case_coloree list =
-
-;; *)
-
+assert( colorie Jaune [(-3,2,1); (6,-3,-3)] = [((6, -3, -3), Jaune); ((-3, 2, 1), Jaune)] );;
 
 (* Question 15 *)
 (* JUSTE *)
@@ -439,7 +436,7 @@ let tourner_config (config:configuration) : configuration =
       tourner_case_list (List.cons (tourner_case case tour_tourner, couleur) return_list) fin in
   tourner_case_list [] case_coloree, tourner_list couleur_list, dimension;;
 
-tourner_config ( [(1,2,-3), Bleu], [Bleu; Rouge; Vert], 3);;  
+assert( tourner_config ([(1,2,-3), Bleu], [Bleu; Rouge; Vert], 3) = ([((-2, 3, -1), Bleu)], [Rouge; Vert; Bleu], 3) );;  
 
 (*Question 16*)
 
@@ -650,7 +647,7 @@ let mettre_a_jour_configuration (conf:configuration) (cp:coup) : configuration =
 
 
 
-let score_gagnant (dim:dimension) : int =
+(* let score_gagnant (dim:dimension) : int =
   let triangle_nord = remplir_triangle_bas dim (dim + 1,- dim , - 1) in
   let coord_i_de_x x =
     let i, j, k = x in
@@ -659,6 +656,6 @@ let score_gagnant (dim:dimension) : int =
   let addition x y = 
     x + y
   let score_gagne = List.fold_left addition 0 liste in
-  score_gagne;;
+  score_gagne;; *)
 
 (*Question 26*)
