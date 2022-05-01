@@ -1,3 +1,12 @@
+(* -----------------------------------------------------------------------------
+   inf201_Tidjani_Duprat_Fraboul_Jiang_1-28.ml : cr exercices projet dames chinoises
+   
+   Manyl Tidjani <Manyl.Tidjani@etu.univ-grenoble-alpes.fr>
+   César Duprat <Cesar.Duprat@etu.univ-grenoble-alpes.fr>
+   Killian Fraboul <Killian.Fraboul@etu.univ-grenoble-alpes.fr>
+   Yilun Jiang <Yilunu.Jiang@etu.univ-grenoble-alpes.fr>
+   -------------------------------------------------------------------------- *)
+
 type case = int * int * int  (*restreint au triplet tels (i,j,k) tels que i+j+k=0*);; (*type case au lieu de case*)
 type dimension = int;;
 let dimension = 3;;
