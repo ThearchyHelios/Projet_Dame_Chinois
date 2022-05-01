@@ -636,17 +636,9 @@ let mettre_a_jour_configuration (conf:configuration) (cp:coup) : configuration =
     else
       conf ;;
 
+(*assert( mettre_a_jour_configuration ([(0,2,-2),Bleu],[Bleu],3) (Du((0,2,-2),(1,1,-2))) = ([(1,1,-2),Bleu],[Bleu],3));;*)
+(*assert( mettre_a_jour_configuration ([(0,2,-2),Bleu],[Bleu],3) (Du((0,2,-2),(0,7,5))) = ([(0,2,-2),Bleu],[Bleu],3));;*)
 
-
-(* Essayer de JIANG Yilun du Question 26*)
-(* Il faut utiliser List.forall, List.exists *)
-(*let score (conf:configuration) : int =
-  let list_case, list_couleur, dim = conf in*)
-  
-  
-
-
-  (* pas fini *)
 
 
 (*Question 26*)
@@ -671,7 +663,7 @@ let score (conf:configuration) : int =
   score ;;
 
 (*Comme il n'est pas possible qu'un joueur n'est aucun pion sur le plateau la fonction renvoit un score de 0 si un joueur n'a pas de pions mais ce n'est pas gênant*)
-assert(score ([(1,2,3),Bleu;(6,8,9),Bleu;(5,-2,-3),Rouge],[Bleu;Rouge],3) = 7);;
+(*assert(score ([(1,2,3),Bleu;(6,8,9),Bleu;(5,-2,-3),Rouge],[Bleu;Rouge],3) = 7);;*)
 
 let score_gagnant (dim:dimension) : int =
   let triangle_nord = remplir_triangle_bas dim (dim + 1,- dim , - 1) in
@@ -684,8 +676,8 @@ let score_gagnant (dim:dimension) : int =
   let score_gagne = List.fold_left addition 0 list_i in
   score_gagne;;
 
-assert(score_gagnant 3 = 28);; (*renvoit () car le score gagnant pour une dimension 3 est bien de 28*)
-assert(score_gagnant 3 = 29);; (*renvoit Assert_failure*)
+(*assert(score_gagnant 3 = 28);; *)
+(*assert(score_gagnant 3 = 29);;*)
 
 (*Question 27*)
 
@@ -695,8 +687,26 @@ let gagne (conf:configuration) : bool =
   let score_gagne = score_gagnant dim in 
   score_j = score_gagne;;
 
-assert(gagne ([(28,-28,0),Bleu],[Bleu],3) = true );; (*Renvoit () car le score de bleu est 28*)
-assert(gagne ([(29,-28,0),Bleu],[Bleu],3) = true );; (*Renvoit Assert_failure*)
+(*assert(gagne ([(28,-28,0),Bleu],[Bleu],3) = true );;*)
+(*assert(gagne ([(29,-28,0),Bleu],[Bleu],3) = true );;*)
 
 (*Question 28*)
 
+let rec est_partie (conf:configuration) (coups: coup list) : couleur =
+  if gagne conf then 
+    let liste_case, liste_couleur, dim = conf in 
+    let gagnant = List.hd liste_couleur in 
+    gagnant 
+  else
+    match coups with
+    | [] -> Libre 
+    | pr :: fin ->
+      match est_coup_valide conf pr with
+      | true -> let conf1 = tourner_config conf in 
+        est_partie (mettre_a_jour_configuration conf1 pr) fin
+      | false -> let conf1 = tourner_config conf in
+        est_partie conf1 fin;;
+
+(*assert(est_partie ([(4,-3,-1),Bleu;(4,-2,-2),Bleu;(5,-3,-2),Bleu;(5,-2,-3),Bleu;(6,-3,-3),Bleu;(3,0,-3),Bleu],[Bleu],3) [Du((3,0,-3),(4,-1,-3))]=Bleu);;*)
+(*assert(est_partie ([(4,-3,-1),Bleu;(4,-2,-2),Bleu;(5,-3,-2),Bleu;(5,-2,-3),Bleu;(6,-3,-3),Bleu;(3,0,-3),Bleu],[Bleu;Rouge],3) [Du((3,0,-3),(4,-1,-3))]=Libre);;*)
+(*Pour le deuxième assert le joueur Bleu a bien atteint le maximum de points mais à la fin de son tour or on évalue si un joueur a gagné au début de son tour*)
