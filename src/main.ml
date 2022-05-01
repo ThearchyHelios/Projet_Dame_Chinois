@@ -128,16 +128,20 @@ assert(est_dans_etoile (0, 0, 0) dimension = true);;
 let tourner_case (c:case) (m:int) : case =
   let x, y, z = c in
   match m with
-  | 1 -> (-y, -z, -x)
-  | 2 -> (z, x, y)
+  | 1 -> (-z, -x, -y)
+  | 2 -> (y, z, x)
   | 3 -> (-x, -y, -z)
-  | 4 -> (-y, z, x)
-  | 5 -> (-z, -x, -y)
+  | 4 -> (z, x, y)
+  | 5 -> (-y, -z, -x)
   | 6 -> (x, y, z)
-  | _ -> c ;; (* pour remplir tous les cas possible avec le match with, mais une valeur autre 1,2,3,4,5 ou 6 ne sera jamais atteinte *)
+  | _ -> c ;;
 
-
-(* assert(tourner_case (-1, 3, -2) 1 = (-3, 2, 1)) *);;
+tourner_case (-4, 1, 3) 1 ;;
+tourner_case (-4, 1, 3) 2 ;;
+tourner_case (-4, 1, 3) 3 ;;
+tourner_case (-4, 1, 3) 4 ;;
+tourner_case (-4, 1, 3) 5 ;;
+tourner_case (-4, 1, 3) 6 ;;
 
 
 (* Question 5 *)
@@ -257,27 +261,27 @@ let pair x =
  *)
 
 
-let calcul_pivot (c1:case) (c2:case) =
+let calcul_pivot (c1:case) (c2:case) : case =
   let d = diff_case_positive c1 c2 in
   let x, y, z = d in
   let x1, y1, z1 = c1 in
   let x2, y2, z2 = c2 in
   if x = 0 && y = 0 && z = 0 then
-    None
+    failwith("Il n'y a pas de reponses")
   else
     if x = y && x != 0 && z = 0 && pair x then
-      Some((x1 + x2) / 2, (y1 + y2) / 2, z1)
+      (x1 + x2) / 2, (y1 + y2) / 2, z1
     else
       if x = z && x != 0 && y = 0 && pair x then
-        Some((x1 + x2) / 2, y1, (z1 + z2) / 2)
+        (x1 + x2) / 2, y1, (z1 + z2) / 2
       else
         if y = z && y != 0 && x = 0 && pair y then
-          Some(x1, (y1 + y2) / 2, (z1 + z2) / 2)
+          x1, (y1 + y2) / 2, (z1 + z2) / 2
         else
-          None;;
+          failwith("Il n'y a pas de reponses");;
 
 calcul_pivot (3,3, -6) (3, -5, 2);;
-assert(calcul_pivot (3,3, -6) (3, -5, 2) = Some (3, -1, -2));;
+assert(calcul_pivot (3,3, -6) (3, -5, 2) = (3, -1, -2));;
 
 
 (* Question 9 *)
@@ -292,26 +296,26 @@ assert(calcul_pivot (3,3, -6) (3, -5, 2) = Some (3, -1, -2));;
  *                 vec_et_dist (3, 2, -5) (1, 2, 3) = Some ((-1, 0, 1), 2)
  *)
 
-let vec_et_dist (c1:case) (c2:case) =
+let vec_et_dist (c1:case) (c2:case) : case*dimension =
   let d = diff_case_positive c1 c2 in
   let x, y, z = d in
   let x1, y1, z1 = c1 in
   let x2, y2, z2 = c2 in
   if x = 0 && y = 0  && z = 0 then
-    None
+    failwith("Il n'y a pas de reponse")
   else
     if x = 0 then
-      Some((0,(y2 - y1) / y, (z2 - z1) / z), y)
+      (0,(y2 - y1) / y, (z2 - z1) / z), y
     else
       if y = 0 then
-        Some(((x2 - x1) / x, 0, (z2 - z1) / z), x)
+        ((x2 - x1) / x, 0, (z2 - z1) / z), x
     else
       if z = 0 then
-        Some(((x2 - x1) / x, (y2 - y1) / y, 0), x)
+        ((x2 - x1) / x, (y2 - y1) / y, 0), x
     else
-      None;;
+      failwith("Il n'y a pas de reponse");;
 
-assert(vec_et_dist (-3, -2, 5) (-3, 5, -2) = Some ((0, 1, -1), 7));;
+assert(vec_et_dist (-3, -2, 5) (-3, 5, -2) = ((0, 1, -1), 7));;
 
 
 (* Question 10*)
@@ -383,7 +387,7 @@ let remplir_triangle_bas (a:int) (case:case) =
     remplir_triangle_bas_rec [] (a);;
 
 
-remplir_triangle_bas 3 (-3, 4, -1);;
+assert( remplir_triangle_bas 3 (-3, 4, -1) = [(-3, 4, -1); (-3, 5, -2); (-2, 4, -2); (-3, 6, -3); (-2, 5, -3); (-1, 4, -3)] );;
 
 (* Question 13 *)
 (* inverser les deux fonctions, triangle_bas fais le haut, triangle_haut fais le bas*)
@@ -401,7 +405,7 @@ let remplir_triangle_haut (a:int) (case:case) =
           remplir_triangle_haut_rec ((remplir_triangle_haut_rec_bis return_list_b (b))) (b - 1) in
     remplir_triangle_haut_rec [] (a);;
 
-remplir_triangle_haut 3 (3, 1, -4);;
+assert( remplir_triangle_haut 3 (-4, 1, 3) = [(-4, 1, 3); (-4, 2, 2); (-5, 2, 3); (-4, 3, 1); (-5, 3, 2); (-6, 3, 3)] );;
 
 
 (* Question 14 *)
@@ -421,10 +425,7 @@ let colorie (color:couleur) (list_case:case list) : case_coloree list =
       list_case_coloree couple fin color in
   list_case_coloree [((List.hd list_case),color)] (List.tl list_case) color;;
 
-(* let colorie_2 (color:couleur) (cs:case list) : case_coloree list =
-
-;; *)
-
+assert( colorie Jaune [(-3,2,1); (6,-3,-3)] = [((6, -3, -3), Jaune); ((-3, 2, 1), Jaune)] );;
 
 (* Question 15 *)
 (* JUSTE *)
@@ -439,7 +440,7 @@ let tourner_config (config:configuration) : configuration =
       tourner_case_list (List.cons (tourner_case case tour_tourner, couleur) return_list) fin in
   tourner_case_list [] case_coloree, tourner_list couleur_list, dimension;;
 
-tourner_config ( [(1,2,-3), Bleu], [Bleu; Rouge; Vert], 3);;  
+tourner_config ([(1,2,-3), Bleu], [Bleu; Rouge; Vert], 3) ;;
 
 (*Question 16*)
 
@@ -449,40 +450,43 @@ type liste_joueur = couleur list ;;
 let remplir_init_2 (a:liste_joueur) (dim:dimension) : configuration =
   let longueur = List.length a in
     match longueur with
-    | 1 -> let triangle_sud = remplir_triangle_bas dim (-4,1,3) in
+    | 1 -> let triangle_sud = remplir_triangle_haut dim (-dim-1,1,dim) in
       let case_color_sud = colorie (List.nth a 0) triangle_sud in
       case_color_sud, a, dim
-    | 2 -> let triangle_sud = remplir_triangle_bas dim (-4,1,3) in
+    | 2 -> let triangle_sud = remplir_triangle_haut dim (-dim-1,1,dim) in
       let case_color_sud = colorie (List.nth a 0) triangle_sud in
-      let triangle_nord = remplir_triangle_haut dim (4,-3,-1) in
+      let triangle_nord = remplir_triangle_bas dim (dim+1,-dim,-1) in
       let case_color_nord = colorie (List.nth a 1) triangle_nord in
       case_color_sud@case_color_nord, a, dim
-    | 3 -> let triangle_sud = remplir_triangle_bas dim (-4,1,3) in
+    | 3 -> let triangle_sud = remplir_triangle_haut dim (-dim-1,1,dim) in
       let case_color_sud = colorie (List.nth a 0) triangle_sud in
-      let triangle_nord_ouest = remplir_triangle_bas dim (3,-6,3) in
+      let triangle_nord_ouest = remplir_triangle_haut dim (dim,-2*dim,dim) in
       let case_color_nord_ouest = colorie (List.nth a 1) triangle_nord_ouest in
-      let triangle_nord_est = remplir_triangle_bas dim (3,1,-4) in
+      let triangle_nord_est = remplir_triangle_bas dim (dim,1,-dim-1) in
       let case_color_nord_est = colorie (List.nth a 2) triangle_nord_est in
       case_color_sud@case_color_nord_ouest@case_color_nord_est, a, dim
-    | 6 -> let triangle_sud = remplir_triangle_bas dim (-4,1,3) in
+    | 6 -> let triangle_sud = remplir_triangle_haut dim (-dim-1,1,dim) in
       let case_color_sud = colorie (List.nth a 0) triangle_sud in
-      let triangle_sud_ouest = remplir_triangle_haut dim (-3,-3,6) in
+      let triangle_sud_ouest = remplir_triangle_haut dim (-dim,-dim,2*dim) in
       let case_color_sud_ouest = colorie (List.nth a 1) triangle_sud_ouest in
-      let triangle_nord_ouest = remplir_triangle_bas dim (3,-6,3) in
+      let triangle_nord_ouest = remplir_triangle_haut dim (dim,-2*dim,dim) in
       let case_color_nord_ouest = colorie (List.nth a 2) triangle_nord_ouest in
-      let triangle_nord = remplir_triangle_haut dim (4,-3,-1) in
+      let triangle_nord = remplir_triangle_bas dim (dim+1,-dim,-1) in
       let case_color_nord = colorie (List.nth a 3) triangle_nord in
-      let triangle_nord_est = remplir_triangle_bas dim (3,1,-4) in
+      let triangle_nord_est = remplir_triangle_bas dim (dim,1,-dim-1) in
       let case_color_nord_est = colorie (List.nth a 4) triangle_nord_est in
-      let triangle_sud_est = remplir_triangle_haut dim (-3,4,-1) in
+      let triangle_sud_est = remplir_triangle_haut dim (-dim,dim+1,-1) in
       let case_color_sud_est = colorie (List.nth a 5) triangle_sud_est in
       case_color_sud@case_color_sud_ouest@case_color_nord_ouest@case_color_nord@case_color_nord_est@case_color_sud_est, a, dim
-    | _ -> failwith("Nombre de joueurs invalides");;
-(* remplir_init ["Kil";"Man"] 3 *)
+    | _ -> failwith("Nombre de joueurs invalides")
+  ;;
 
+remplir_init_2 [Bleu; Jaune; Vert] 3 ;;
 
 (*Question 17*)
 (* JUSTE *)
+(* NB: la fonction quelle_couleur n'est pas implémentée chez nous, 
+   car associe joue déjà son role *)
 let associe (a:case) (config:configuration) : couleur =
   let list_case, list_couleur, dim = config in
   let rec case_in_list list_case =
@@ -493,7 +497,12 @@ let associe (a:case) (config:configuration) : couleur =
          then couleur
       else
         case_in_list fin in
-  case_in_list list_case ;;
+  case_in_list list_case 
+;;
+
+(* Tests *)
+assert( associe (0,0,0) ([((0, 0, 0), Bleu)], [Rouge; Vert; Bleu], 3) = Bleu );;
+assert( associe (1,2,-3) ([((0, 0, 0), Rouge); ((-1,0,1),Jaune)], [Rouge; Jaune; Bleu], 3) = Libre );;
 
 (*Question 18*)
 
@@ -508,7 +517,85 @@ let supprime_dans_config (conf:configuration) (c:case) : configuration =
         suppr fin
       else
         [pr]@(suppr fin) in
-  (suppr list_case), list_couleur, dim ;;
+  (suppr list_case), list_couleur, dim 
+;;
+
+supprime_dans_config ([((3,-2,-1), Rouge); ((2,1,-3), Vert)], [Rouge;Vert], 3) (2,1,-3) ;;
+
+
+(*Question 22*)
+
+let est_libre_seg (c1:case) (c2:case) (conf:configuration) : bool =
+  let vect_unit, distance = vec_et_dist c1 c2 in
+  let vx, vy, vz = vect_unit in
+  let rec seg_libre (c1:case) (conf:configuration) (distance:int) : bool =
+    match distance with
+    | -1 -> false
+    | 0 -> true
+    | _ -> if (associe c1 conf) = Libre then
+        let distance1 = distance - 1 in
+        let cx, cy, cz = c1 in
+        let cx2 = cx + vx in 
+        let cy2 = cy + vy in 
+        let cz2 = cz + vz in
+        seg_libre (cx2,cy2,cz2) conf distance1
+      else
+        let distance1 = -1 in
+        seg_libre c1 conf distance1 in
+  let cx, cy, cz = c1 in
+  let c1x = vx + cx in 
+  let c1y = vy + cy in 
+  let c1z = vz + cz in
+  let distance1 = distance + 1 in
+  seg_libre (c1x,c1y,c1z) conf distance1 
+;;
+
+(*Question 23*)
+
+let est_saut (c1:case) (c2:case) (conf:configuration) : bool =
+  if associe c2 conf = Libre then
+    let list_case, list_color, dim = conf in
+    if associe c1 conf = List.hd list_color then
+      let vect_unit, distance_c1_c2 = vec_et_dist c1 c2 in
+      if distance_c1_c2 mod 2 != 0 then 
+        let pivot = calcul_pivot c1 c2 in
+        if associe pivot conf != Libre then
+          if est_libre_seg c1 pivot conf then
+            if est_libre_seg pivot c2 conf then
+              true
+            else
+              false 
+          else
+            false
+        else
+          false
+      else
+        false
+    else
+      false
+  else
+    false;;
+
+
+(*Question 24*)
+
+let est_saut_multiple (list_coup:case list) (conf:configuration) : bool =
+  let longueur = List.length list_coup in 
+  let rec test list_coup conf i longueur =
+    match i with 
+    | longueur -> true
+    | -1 -> false
+    | _ -> let c1 = List.nth list_coup i in 
+      let c2 = List.nth list_coup (i+1) in
+      if est_saut c1 c2 conf then 
+        let i1 = i + 1 in
+        test list_coup conf i1 longueur
+      else
+        let i1 = -1 in
+        test list_coup conf i1 longueur in
+  test list_coup conf longueur 0 ;;
+
+(*Question 25*)
 
 (*Question 19*)
 
@@ -529,7 +616,11 @@ let est_coup_valide (conf:configuration) (a:coup) : bool =
           false
       else
         false
-    | Sm k -> failwith("Coups multiples non implementes");;
+    | Sm k -> est_saut_multiple k conf
+;;
+
+assert( est_coup_valide ([((3,-2,-1), Rouge); ((2,1,-3), Vert)], [Rouge;Vert], 3) (Du((-4,3,1),(-3,3,0))) = false );;
+assert( est_coup_valide ([((-4,3,1),Rouge); ((-3,3,0), Libre)], [Rouge], 3) (Du((-4,3,1),(-3,3,0))) = true );;
 
 (*Question 20*)
 
@@ -541,7 +632,16 @@ let appliquer_coup (conf:configuration) (a:coup) : configuration =
       let list_case, list_couleur, dim = conf1 in
       let list_case1 = list_case @ [c2,(List.nth list_couleur 0)] in
       list_case1, list_couleur, dim
-    | Sm k -> failwith("Sauts multiples non implementes");;
+    | Sm k -> let c1 = List.hd k in 
+      let longueur = List.length k in 
+      let c2 = List.nth k (longueur-1) in 
+      let conf1 = supprime_dans_config conf c1 in
+      let list_case, list_couleur, dim = conf1 in
+      let list_case1 = list_case @ [c2,(List.nth list_couleur 0)] in
+      list_case1, list_couleur, dim 
+;;
+
+assert( appliquer_coup ([((3,-2,-1), Rouge); ((2,1,-3), Vert)], [Rouge;Vert], 3) (Du((3,-2,-1),(4,-2,-2))) = ([((2, 1, -3), Vert); ((4, -2, -2), Rouge)], [Rouge; Vert], 3) );;
 
 (*Question 21*)
 
@@ -551,53 +651,91 @@ let mettre_a_jour_configuration (conf:configuration) (cp:coup) : configuration =
       appliquer_coup conf cp
     else
       conf
-  | Sm k -> failwith("Sauts multiples non implementes");;
-
-(*Question 22*)
-
-(*let est_libre_seg (c1:case) (c2:case) (conf:configuration) : bool =
-  let vect_unit, distance = vect_et_dist c1 c2 in
-  let vx, vy, vz = vect_unit in
-  let cx, cy, cz = c1 in
-  let rec seg_libre c1 conf distance =
-    match distance with
-    | 0 -> true
-    | _ -> if associe c1 conf = Libre then
-        let cx, cy, cz = c1 in
-        let cx2 = cx + vx in 
-        let cy2 = cy + vy in 
-        let cz2 = cz + vz in
-        seg_libre (cx2, cy2, cz2) conf (distance - 1)
-      else
-        false
-  
-  seg_libre vx+cx,vy+cy,vz+cz conf (distance - 1);;*)
-
-(*Question 23*)
-
-(*let est_saut (c1:case) (c2:case) (conf:configuration) : bool =
-  if associe c2 conf = Libre then
-    let list_case, list_color, dim = conf in
-    if associe c1 conf = List.hd list_color then
-      let vect_unit, distance_c1_c2 = vect_et_dist c1 c2 in
-      if distance_c1_c2 mod 2 != 0 then (*Si distance pair il ne peut pas avoir de pivot*) then
-        let pivot = calcul_pivot c1 c2 in
-        if associe pivot conf != libre then
-          if est_libre_seg
-
-
-      
-
-
-
-if associe (vx+cx,vy+cy,vz+cz) conf != Libre then 
-         if associe c1 conf = List.hd list_color 
-            true 
-          else
-            false 
-        else
-          false
-      else
-        false 
+  | Sm k -> if est_coup_valide conf cp then 
+      appliquer_coup conf cp 
     else
-      false;;*)
+      conf ;;
+
+assert( mettre_a_jour_configuration ([(0,2,-2),Bleu],[Bleu],3) (Du((0,2,-2),(1,1,-2))) = ([(1,1,-2),Bleu],[Bleu],3));;
+assert( mettre_a_jour_configuration ([(0,2,-2),Bleu],[Bleu],3) (Du((0,2,-2),(0,7,5))) = ([(0,2,-2),Bleu],[Bleu],3));;
+
+
+
+(*Question 26*)
+
+let score (conf:configuration) : int =
+  let list_case, liste_joueur, dim = conf in  
+  let est_case_joueur (c:case_coloree) : bool = (*cette fonction vérifie si la case coloree entrée est bien de la couleur du joueur actuel*)
+    let j1 = List.hd liste_joueur in
+    let c1, color = c in
+    if color = j1 then 
+      true
+    else
+      false in
+  let liste_filtre = List.filter est_case_joueur list_case in
+  let i_de_case_coloree (c:case_coloree) = (*cette fonction renvoit la coordonné i d'une case coloree avec case = (i,j,k)*)
+    let (i, j, k), color = c in
+    i in
+  let list_i = List.map i_de_case_coloree liste_filtre in
+  let addition (x:int) (y:int) : int =
+    x + y in
+  let score = List.fold_left addition 0 list_i in 
+  score ;;
+
+(*Comme il n'est pas possible qu'un joueur n'est aucun pion sur le plateau la fonction renvoit un score de 0 si un joueur n'a pas de pions mais ce n'est pas gênant*)
+(*assert(score ([(1,2,3),Bleu;(6,8,9),Bleu;(5,-2,-3),Rouge],[Bleu;Rouge],3) = 7);;*)
+
+let score_gagnant (dim:dimension) : int =
+  let triangle_nord = remplir_triangle_bas dim (dim + 1,- dim , - 1) in
+  let coord_x_de_i (x:case) : int = (*fait la même chose que la fonction i_de_case_coloree*)
+    let i, j, k = x in
+    i in
+  let list_i = List.map coord_x_de_i triangle_nord in
+  let addition (x:int) (y:int) : int =
+    x + y in
+  let score_gagne = List.fold_left addition 0 list_i in
+  score_gagne;;
+
+(*assert(score_gagnant 3 = 28);; *)
+(*assert(score_gagnant 3 = 29);;*)
+
+(*Question 27*)
+
+let gagne (conf:configuration) : bool =
+  let score_j = score conf in 
+  let list_case, liste_couleur, dim = conf in 
+  let score_gagne = score_gagnant dim in 
+  score_j = score_gagne;;
+
+(*assert(gagne ([(28,-28,0),Bleu],[Bleu],3) = true );;*)
+(*assert(gagne ([(29,-28,0),Bleu],[Bleu],3) = true );;*)
+
+(*Question 28*)
+
+let rec est_partie (conf:configuration) (coups: coup list) : couleur =
+  if gagne conf then 
+    let liste_case, liste_couleur, dim = conf in 
+    let gagnant = List.hd liste_couleur in 
+    gagnant 
+  else
+    match coups with
+    | [] -> Libre 
+    | pr :: fin ->
+      match est_coup_valide conf pr with
+      | true -> let conf_1 = mettre_a_jour_configuration conf pr in 
+        let _,liste_couleur,_ = conf_1 in
+        if List.length liste_couleur = 1 then
+          est_partie conf_1 fin
+        else
+          let conf_2 = tourner_config conf_1 in 
+          est_partie conf_2 fin
+      | false -> let _,liste_couleur,_ = conf in
+        if List.length liste_couleur = 1 then
+          est_partie conf fin
+        else
+          let conf_1 = tourner_config conf in 
+          est_partie conf_1 fin;;
+
+(*assert(est_partie ([(4,-3,-1),Bleu;(4,-2,-2),Bleu;(5,-3,-2),Bleu;(5,-2,-3),Bleu;(6,-3,-3),Bleu;(3,0,-3),Bleu],[Bleu],3) [Du((3,0,-3),(4,-1,-3))]=Bleu);;*)
+(*assert(est_partie ([(4,-3,-1),Bleu;(4,-2,-2),Bleu;(5,-3,-2),Bleu;(5,-2,-3),Bleu;(6,-3,-3),Bleu;(3,0,-3),Bleu],[Bleu;Rouge],3) [Du((3,0,-3),(4,-1,-3))]=Libre);;*)
+(*Pour le deuxième assert le joueur Bleu a bien atteint le maximum de points mais à la fin de son tour or on évalue si un joueur a gagné au début de son tour*)
