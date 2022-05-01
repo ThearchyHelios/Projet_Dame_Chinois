@@ -650,7 +650,7 @@ let mettre_a_jour_configuration (conf:configuration) (cp:coup) : configuration =
 
 
 
-(* let score_gagnant (dim:dimension) : int =
+let score_gagnant (dim:dimension) : int =
   let triangle_nord = remplir_triangle_bas dim (dim + 1,- dim , - 1) in
   let coord_i_de_x x =
     let i, j, k = x in
@@ -659,8 +659,6 @@ let mettre_a_jour_configuration (conf:configuration) (cp:coup) : configuration =
   let addition x y = 
     x + y
   let score_gagne = List.fold_left addition 0 liste in
-  score_gagne;; *)
+  score_gagne;;
 
 (*Question 26*)
-
-  
