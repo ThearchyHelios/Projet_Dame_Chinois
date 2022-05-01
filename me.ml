@@ -547,7 +547,8 @@ let est_libre_seg (c1:case) (c2:case) (conf:configuration) : bool =
   let c1y = vy + cy in 
   let c1z = vz + cz in
   let distance1 = distance + 1 in
-  seg_libre (c1x,c1y,c1z) conf distance1 ;;
+  seg_libre (c1x,c1y,c1z) conf distance1 
+;;
 
 (*Question 23*)
 
@@ -655,8 +656,8 @@ let mettre_a_jour_configuration (conf:configuration) (cp:coup) : configuration =
     else
       conf ;;
 
-(*assert( mettre_a_jour_configuration ([(0,2,-2),Bleu],[Bleu],3) (Du((0,2,-2),(1,1,-2))) = ([(1,1,-2),Bleu],[Bleu],3));;*)
-(*assert( mettre_a_jour_configuration ([(0,2,-2),Bleu],[Bleu],3) (Du((0,2,-2),(0,7,5))) = ([(0,2,-2),Bleu],[Bleu],3));;*)
+assert( mettre_a_jour_configuration ([(0,2,-2),Bleu],[Bleu],3) (Du((0,2,-2),(1,1,-2))) = ([(1,1,-2),Bleu],[Bleu],3));;
+assert( mettre_a_jour_configuration ([(0,2,-2),Bleu],[Bleu],3) (Du((0,2,-2),(0,7,5))) = ([(0,2,-2),Bleu],[Bleu],3));;
 
 
 
